@@ -6,4 +6,4 @@ import os
 dbini_path = os.getenv("ROOT_DIR")
 
 _DbConnection = DbConnection(dbini_path)
-print(str(_DbConnection.config()))
+print(str(_DbConnection.setup_connection()))

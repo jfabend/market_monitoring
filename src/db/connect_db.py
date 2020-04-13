@@ -6,6 +6,7 @@
 #!/usr/bin/python
 
 from configparser import ConfigParser
+import psycopg2
 
 class DbConnection():
 
@@ -35,5 +36,14 @@ class DbConnection():
             raise Exception('Section {0} not found in the {1} file'.format(section, filename))
     
         return db
+
+    def setup_connection(self):
+        dbparams = self.config()
+        # Connect to the PostgreSQL database
+        conn = psycopg2.connect(**dbparams)
+        # Create a new cursor
+        cur = conn.cursor()
+
+        return conn, cur
 
 #print(str(self.config(filename=self.dbini_path , section='postgresql')))
