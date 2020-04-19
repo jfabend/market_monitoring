@@ -7,7 +7,7 @@ COPY tmp FROM '__filepath__' WITH (FORMAT csv, HEADER true);
 INSERT INTO __tablename__
     SELECT tmp.*
     FROM   tmp
-    LEFT   JOIN __tablename__ USING (datum)
-    WHERE  __tablename__.datum IS NULL;
+    LEFT   JOIN __tablename__ USING (date)
+    WHERE  __tablename__.date IS NULL;
 
 DROP TABLE IF EXISTS tmp; -- else dropped at end of session automatically
