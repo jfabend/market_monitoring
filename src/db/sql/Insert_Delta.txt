@@ -1,0 +1,13 @@
+CREATE TABLE IF NOT EXISTS __tablename__ (__columnstring__);
+
+CREATE TABLE IF NOT EXISTS tmp (__columnstring__);
+
+COPY tmp FROM '__filepath__' WITH (FORMAT csv, HEADER true);
+
+--INSERT INTO __tablename__
+--SELECT tmp.*
+--FROM   tmp
+--LEFT   JOIN __tablename__ USING (tbl_id)
+--WHERE  tbl.tbl_id IS NULL;
+
+DROP TABLE IF EXISTS tmp; -- else dropped at end of session automatically

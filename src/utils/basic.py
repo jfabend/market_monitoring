@@ -41,6 +41,10 @@ def convert_headers_to_colstring(headers):
             colstring = colstring + " " + col.replace("'", "") + " varchar"
         else:
             colstring = colstring + ", " + col.replace("'", "") + " varchar"
-    return colstring
-    #string = "'date'"
-    #rint(string.replace("'", ""))
+    return colstring.lower()
+
+def fill_up_query(query_template, colstring, tablename, filepath):
+    step_one = query_template.replace("__columnstring__", colstring)
+    step_two = step_one.replace("__tablename__", tablename)
+    step_three = step_two.replace("__filepath__", filepath)
+    return step_three
