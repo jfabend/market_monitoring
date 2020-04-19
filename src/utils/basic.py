@@ -27,4 +27,5 @@ def get_file_headers(path):
             if not col_only_letters:
                 col_only_letters = 'leer'
             header_decoded.append(col_only_letters)
+            
     return header_decoded
