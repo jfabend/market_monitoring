@@ -29,3 +29,7 @@ def get_file_headers(path):
             header_decoded.append(col_only_letters)
             
     return header_decoded
+
+def read_query_file(path):
+    f = open(path,"r")
+    return f.read()

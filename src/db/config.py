@@ -10,6 +10,6 @@ class Config():
     @property
     def queries(self):
         query_dict = {
-            "create_update_dict":self.root + "\\db\\sql\\Insert_Delta.txt"
+            "create_update":self.root + "\\db\\sql\\Insert_Delta.txt"
         }
         return query_dict
