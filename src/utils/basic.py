@@ -33,3 +33,14 @@ def get_file_headers(path):
 def read_query_file(path):
     f = open(path,"r")
     return f.read()
+
+def convert_headers_to_colstring(headers):
+    colstring = ""
+    for col in headers:
+        if headers.index(col) == 0:
+            colstring = colstring + " " + col.replace("'", "") + " varchar"
+        else:
+            colstring = colstring + ", " + col.replace("'", "") + " varchar"
+    return colstring
+    #string = "'date'"
+    #rint(string.replace("'", ""))
