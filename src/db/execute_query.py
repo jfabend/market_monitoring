@@ -19,5 +19,5 @@ class QueryExecution():
             print("I can't drop our test database!")
 
         self.conn.commit() # <--- makes sure the change is shown in the database
-        self.conn.close()
-        self.cur.close()
+        #self.conn.close()
+        #self.cur.close()

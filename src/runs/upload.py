@@ -24,17 +24,14 @@ def main(argv):
          inputfolder = arg
    print('Input folder is "' + inputfolder + '"')
 
-   file_list = basic.get_folder_files(inputfolder)
+   file_list = basic.get_folder_files(inputfolder, '*.csv')
    print("Following files were found: " + str(file_list))
    _DeltaUploader = DeltaUploader()
 
    for filepath in file_list:
       print("Import " + filepath + " to DB.")
-      try:
-         _DeltaUploader.delta_upload(filepath)
-         print("Done.")
-      except:
-         print("Import of " + filepath + " has failed.")
+      _DeltaUploader.delta_upload(filepath)
+      print("Done.")
 
 if __name__ == "__main__":
    main(sys.argv[1:])

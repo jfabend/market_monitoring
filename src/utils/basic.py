@@ -47,4 +47,8 @@ def fill_up_query(query_template, colstring, tablename, filepath):
     step_one = query_template.replace("__columnstring__", colstring)
     step_two = step_one.replace("__tablename__", tablename)
     step_three = step_two.replace("__filepath__", filepath)
-    return step_three
+    if "datum" in colstring:
+        step_four = step_three.replace("__idcol__", "datum")
+    if "date" in colstring:
+        step_four = step_three.replace("__idcol__", "date")
+    return step_four
