@@ -5,9 +5,11 @@ import glob
 import csv
 import string
 import re
+import pandas as pd
 
 def get_folder_files(foldername, pattern = '*'):
-    return glob.glob(foldername + pattern)
+    #return glob.glob(foldername + pattern)
+    return glob.glob(foldername + '/**/' + pattern, recursive=True)
 
 def get_parent_folder(path):
     if "\\" in path:
@@ -52,3 +54,7 @@ def fill_up_query(query_template, colstring, tablename, filepath):
     if "date" in colstring:
         step_four = step_three.replace("__idcol__", "date")
     return step_four
+
+def delete_na_from_csv(file_path):
+    df = pd.read_csv(file_path, sep=',').dropna()
+    df.to_csv(file_path, index=False)

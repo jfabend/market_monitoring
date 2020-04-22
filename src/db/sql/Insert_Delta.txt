@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS __tablename__ (__columnstring__);
 
 CREATE TABLE IF NOT EXISTS tmp (__columnstring__);
 
-COPY tmp FROM '__filepath__' WITH (FORMAT csv, HEADER true);
+COPY tmp FROM '__filepath__' WITH (FORMAT csv, HEADER true, NULL 'NA');
 
 INSERT INTO __tablename__
     SELECT tmp.*

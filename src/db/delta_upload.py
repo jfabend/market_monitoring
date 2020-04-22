@@ -22,6 +22,10 @@ class DeltaUploader():
 
         headers = basic.get_file_headers(current_file_path)
         print("File headers: " + str(headers))
+        if len(headers) <= 1:
+            return
+
+        basic.delete_na_from_csv(current_file_path)
 
         colstring = basic.convert_headers_to_colstring(headers)
         print("Colstring: " + colstring)
