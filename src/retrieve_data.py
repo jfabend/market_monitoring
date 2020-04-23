@@ -1,8 +1,8 @@
-import pandas_datareader as pdr
-import googlefinance as gf
-import json
-from urllib.request import Request
-import yahoo_finance as yf
-symbol = yf.Share("YHOO")
-print(symbol.get_open())
-#print(json.dumps(gf.getQuotes('AAPL'), indent=2))
+import os
+
+my_symbols = ["DAX", "^GSPC", "TN8.F"]
+retrieve_r_cmd = "Rscript .\\src\\retrieve_data.r __symbol__ C:/Data/Trading/market_monitoring/apidata"
+
+for symbol in my_symbols:
+    cmd_string = retrieve_r_cmd.replace("__symbol__", symbol)
+    os.system(cmd_string)
