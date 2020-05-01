@@ -59,16 +59,65 @@ def delete_na_from_csv(file_path):
     df = pd.read_csv(file_path, sep=',').dropna()
     df.to_csv(file_path, index=False)
 
-def inspect_pd_table(pd_df):
+def value_sample_pd_table(pd_df):
     col_list = list(pd_df.columns)   # - with colnames
     # result = [pd_df.loc[[0], [col]] for col in col_list] - first cell, but including colname
     result = [pd_df.ix[0, col] for col in col_list]   # first cell value
     return result
 
+def cols_pd_table(pd_df):
+    return list(pd_df.columns)
+
 def string_to_sql_type(string):
-    german_date_one = re.findall('\d\d\.\d\d\.20\d\d', string)
-    german_date_two = re.findall('\d\d\.\d\d\.19\d\d', string)
+
+    # date regex
+    german_date_one = re.findall('^\d\d\.\d\d\.20\d\d$', string)
+    german_date_two = re.findall('^\d\d\.\d\d\.19\d\d$', string)
+    us_date_one = re.findall('^19\d\d-\d\d-\d\d$', string)
+    us_date_two = re.findall('^20\d\d-\d\d-\d\d$', string)
+
+    # float regex
+    us_decimal_one = re.findall('^\d+.\d{1,2}$', string)               # 29.99
+    us_decimal_two = re.findall('^\d+,\d{3}.\d{1,2}$', string)           # 140,000.99
+    us_decimal_three = re.findall('^\d+,\d{3},\d{3}.\d{1,2}$', string)    # 140,000,000.99
+    us_decimal_four = re.findall('^\d+,\d{3},\d{3},\d{3}.\d{1,2}$', string)    # 140,000,000,000.99
+
+    numeric_one = re.findall('^\d+$', string)                                 # 45
+    us_numeric_one = re.findall('^\d+,\d{3}$', string)
+    eu_numeric_one = re.findall('^\d+.\d{3}$', string)
+
+    eu_decimal_one = re.findall('^\d+,\d{1,2}$', string)
+    eu_decimal_two = re.findall('^\d+.\d{3},\d{1,2}$', string)  
+
     if german_date_one or german_date_two:
         return 'date__DD.MM.YYYY'
+    if us_date_one or us_date_two:
+        return 'date__YYYY-MM-DD'
+    if us_decimal_one or us_decimal_two or us_decimal_three or us_decimal_four:
+        return 'us_decimal'
+    if numeric_one or us_numeric_one or eu_numeric_one:
+        return 'numeric'
+    if eu_decimal_one or eu_decimal_two:
+        return 'eu_decimal'
     else:
-        return 'dontknow'
+        return 'varchar'
+
+def form_main_part_core_query(cols, target_types):
+    query = "SELECT "
+    for col in cols:
+        idx = cols.index(col)
+        if idx != (len(cols) - 1):
+            if 'date' in target_types[idx]:
+                query = query + "TO_DATE(" + col + ", '" + target_types[idx].replace("date__", "") + "')" + " AS " + "date" + ", "
+            if target_types[idx] is 'numeric' or 'decimal' in target_types[idx]:
+                query = query + "CAST(" + col + " AS double precision)" + " AS " + col + ", "
+            if 'date'not in target_types[idx] and 'numeric' not in target_types[idx] and 'decimal' not in target_types[idx]:
+                query = query + col + " AS " + col + ", "
+        else:
+            if 'date' in target_types[idx]:
+                query = query + "TO_DATE(" + col + ", '" + target_types[idx].replace("date__", "") + "')" + " AS " + "date" + " FROM "
+            if target_types[idx] is 'numeric' or 'decimal' in target_types[idx]:
+                query = query + "CAST(" + col + " AS double precision)" + " AS " + col + " FROM "
+            if 'date'not in target_types[idx] and 'numeric' not in target_types[idx] and 'decimal' not in target_types[idx]:
+                query = query + col + " AS " + col + " FROM "
+    return query
