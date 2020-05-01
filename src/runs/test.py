@@ -4,16 +4,22 @@ load_dotenv(verbose=False)
 sys.path.append(os.getenv("ROOT_DIR"))
 from utils import basic
 from db.config import Config
+from db.get_db_data import GetTableData
 
-current_file_path = 'C:\\Users\\jonat\\OneDrive\\Trading\\Scoring und Marktüberwachung\\rohdaten\\futures_dax\\200903_202004.csv'
+_GetTableData = GetTableData()
+table_data = _GetTableData.create_pandas_table("SELECT * FROM futures_dax LIMIT 3;")
 
-headers = basic.get_file_headers(current_file_path)
+col_values = basic.inspect_pd_table(table_data)
+print([basic.string_to_sql_type(col_value) for col_value in col_values])
 
-colstring = basic.convert_headers_to_colstring(headers)
-table_name = basic.get_parent_folder(current_file_path)
+_GetTableData.close_conn()
 
-_Config = Config()
-query_path = str(_Config.queries["create_update"])
-query_string = basic.read_query_file(query_path)
 
-final_query = basic.fill_up_query(query_string, colstring, table_name, current_file_path)
+
+        # Herausfinden, wie die Datumspalte heißt
+            # Man könnte auch einfach erstmal die erste Spalte nehmen
+            # CASE für die Prüfung, ob das Date Format europäisch oder amerikanisch ist
+
+        # Herausfinden, welche Datentypen die Spalten haben
+            # Regex - enthält die Spalte Zahlen?
+            # Regex - enthält die Spalten . oder , als Dezimalseperator

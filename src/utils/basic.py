@@ -58,3 +58,17 @@ def fill_up_query(query_template, colstring, tablename, filepath):
 def delete_na_from_csv(file_path):
     df = pd.read_csv(file_path, sep=',').dropna()
     df.to_csv(file_path, index=False)
+
+def inspect_pd_table(pd_df):
+    col_list = list(pd_df.columns)   # - with colnames
+    # result = [pd_df.loc[[0], [col]] for col in col_list] - first cell, but including colname
+    result = [pd_df.ix[0, col] for col in col_list]   # first cell value
+    return result
+
+def string_to_sql_type(string):
+    german_date_one = re.findall('\d\d\.\d\d\.20\d\d', string)
+    german_date_two = re.findall('\d\d\.\d\d\.19\d\d', string)
+    if german_date_one or german_date_two:
+        return 'date__DD.MM.YYYY'
+    else:
+        return 'dontknow'

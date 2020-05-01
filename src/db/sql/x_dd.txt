@@ -1,0 +1,3 @@
+SELECT to_date('20170103','YYYYMMDD');
+
+select cast('132342' as float);
