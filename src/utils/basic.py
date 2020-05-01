@@ -121,3 +121,24 @@ def form_main_part_core_query(cols, target_types):
             if 'date'not in target_types[idx] and 'numeric' not in target_types[idx] and 'decimal' not in target_types[idx]:
                 query = query + col + " AS " + col + " FROM "
     return query
+
+def form_create_part_core_query(cols, target_types):
+    query = "CREATE TABLE __tablename__ IF NOT EXISTS ( "
+    for col in cols:
+        idx = cols.index(col)
+        if idx != (len(cols) - 1):
+            if 'date' in target_types[idx]:
+                query = query + col + " date, "
+            if target_types[idx] is 'numeric' or 'decimal' in target_types[idx]:
+                query = query +  col + " double precision, "
+            if 'date'not in target_types[idx] and 'numeric' not in target_types[idx] and 'decimal' not in target_types[idx]:
+                query = query +  col + " varchar, "
+        else:
+            if 'date' in target_types[idx]:
+                query = query +  col + " date"
+            if target_types[idx] is 'numeric' or 'decimal' in target_types[idx]:
+                query = query +  col + " double precision"
+            if 'date'not in target_types[idx] and 'numeric' not in target_types[idx] and 'decimal' not in target_types[idx]:
+                query = query +  col + " varchar"
+    query = query + ");"
+    return query
