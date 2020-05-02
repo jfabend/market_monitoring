@@ -1,3 +1,8 @@
-SELECT to_date('20170103','YYYYMMDD');
+CREATE TABLE IF NOT EXISTS c_jobless_claims ( date date, value double precision);
 
-select cast('132342' as float);
+INSERT INTO c_jobless_claims
+    SELECT TO_DATE(jobless_claims.date, 'YYYY-MM-DD') AS date, CAST(jobless_claims.value AS double precision) AS value
+    FROM   jobless_claims
+    LEFT   JOIN c_jobless_claims
+	ON CAST(c_jobless_claims.date as varchar) = jobless_claims.date
+    WHERE  c_jobless_claims.date IS NULL;
