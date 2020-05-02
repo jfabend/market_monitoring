@@ -12,12 +12,9 @@ from db.execute_query import QueryExecution
 
 class GetTableData():
 
-    def __init__(self):
-        self.dbini_path = os.getenv("ROOT_DIR")
-        self._DbConnection = DbConnection(self.dbini_path)
-        self.connection_objects = self._DbConnection.setup_connection()
-        self.conn = self.connection_objects[0]
-        self.cur = self.connection_objects[1]
+    def __init__(self, conn, cur):
+        self.conn = conn
+        self.cur = cur
 
     # A function that takes in a PostgreSQL query and outputs a pandas database 
     def create_pandas_table(self, sql_query):

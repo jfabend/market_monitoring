@@ -110,6 +110,8 @@ def string_to_sql_type(string):
 
 def form_main_part_core_query(cols, target_types, tablename):
     query = " INSERT INTO c___tablename__ SELECT "
+    query = query.replace("__tablename__", (tablename))
+    tablename = "sta_" + tablename
     query = query.replace("__tablename__", tablename)
     for col in cols:
         idx = cols.index(col)
@@ -163,7 +165,7 @@ def form_join_part_core_query(cols, target_types, tablename):
     date_col_index = [target_types.index(coltype) for coltype in target_types  if 'date' in coltype][0]
     date_col = cols[date_col_index]
     date_format = [coltype.replace("date__", "") for coltype in target_types  if 'date' in coltype][0]
-    query = (" LEFT JOIN c___tablename__ ON c___tablename__.date = TO_DATE(__tablename__."
+    query = (" LEFT JOIN c___tablename__ ON c___tablename__.date = TO_DATE(sta___tablename__."
             + date_col
             + ", '" + date_format + "')"
             + " WHERE c___tablename__.date is NULL;")

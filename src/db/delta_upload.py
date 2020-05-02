@@ -33,8 +33,7 @@ class DeltaUploader():
         table_name = basic.get_parent_folder(current_file_path)
         print("tablename: " + table_name)
 
-        _Config = 
-        Config()
+        _Config = Config()
         query_path = str(_Config.queries["create_update"])
         query_string = basic.read_query_file(query_path)
 
