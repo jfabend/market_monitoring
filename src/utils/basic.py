@@ -69,12 +69,16 @@ def cols_pd_table(pd_df):
     return list(pd_df.columns)
 
 def string_to_sql_type(string):
+    # https://www.postgresqltutorial.com/postgresql-to_char/
+    # https://www.rexegg.com/regex-quickstart.html
 
     # date regex
     german_date_one = re.findall('^\d\d\.\d\d\.20\d\d$', string)
     german_date_two = re.findall('^\d\d\.\d\d\.19\d\d$', string)
     us_date_one = re.findall('^19\d\d-\d\d-\d\d$', string)
     us_date_two = re.findall('^20\d\d-\d\d-\d\d$', string)
+    us_date_three = re.findall('^\D{3} \d\d, 20\d\d$', string)
+    us_date_four = re.findall('^\D{3} \d\d, 19\d\d$', string)
 
     # float regex
     us_decimal_one = re.findall('^\d+.\d{1,2}$', string)               # 29.99
@@ -93,6 +97,8 @@ def string_to_sql_type(string):
         return 'date__DD.MM.YYYY'
     if us_date_one or us_date_two:
         return 'date__YYYY-MM-DD'
+    if us_date_three or us_date_four:
+        return 'date__Mon DD, YYYY'
     if us_decimal_one or us_decimal_two or us_decimal_three or us_decimal_four:
         return 'us_decimal'
     if numeric_one or us_numeric_one or eu_numeric_one:
