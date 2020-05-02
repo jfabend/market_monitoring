@@ -109,18 +109,26 @@ def form_main_part_core_query(cols, target_types, tablename):
         idx = cols.index(col)
         if idx != (len(cols) - 1):
             if 'date' in target_types[idx]:
-                query = query + "TO_DATE(" + tablename + "." + col + ", '" + target_types[idx].replace("date__", "") + "')" + " AS " + "date" + ", "
+                query = query + "TO_DATE(" + tablename + "." + col + ", '" + target_types[idx].replace("date__", "") + "')" + " AS " + "date"
             if target_types[idx] is 'numeric' or 'decimal' in target_types[idx]:
-                query = query + "CAST(" + tablename + "." + col + " AS double precision)" + " AS " + col + ", "
+                if 'eu_' in target_types[idx]:
+                    query = query + "CAST(REPLACE(REPLACE(" + tablename + "." + col + ", '.', ''), ',', '.') AS double precision)" + " AS " + col                  
+                else:
+                    query = query + "CAST(" + tablename + "." + col + " AS double precision)" + " AS " + col
             if 'date'not in target_types[idx] and 'numeric' not in target_types[idx] and 'decimal' not in target_types[idx]:
-                query = query + tablename + "." + col + " AS " + col + ", "
+                query = query + tablename + "." + col + " AS " + col
+            query = query + ", "
         else:
             if 'date' in target_types[idx]:
-                query = query + "TO_DATE(" + tablename + "." + col + ", '" + target_types[idx].replace("date__", "") + "')" + " AS " + "date" + " FROM "
+                query = query + "TO_DATE(" + tablename + "." + col + ", '" + target_types[idx].replace("date__", "") + "')" + " AS " + "date"
             if target_types[idx] is 'numeric' or 'decimal' in target_types[idx]:
-                query = query + "CAST(" + tablename + "." + col + " AS double precision)" + " AS " + col + " FROM "
+                if 'eu_' in target_types[idx]:
+                    query = query + "CAST(REPLACE(REPLACE(" + tablename + "." + col + ", '.', ''), ',', '.') AS double precision)" + " AS " + col                 
+                else:
+                    query = query + "CAST(" + tablename + "." + col + " AS double precision)" + " AS " + col
             if 'date'not in target_types[idx] and 'numeric' not in target_types[idx] and 'decimal' not in target_types[idx]:
-                query = query + tablename + "." + col + " AS " + col + " FROM " + tablename
+                query = query + tablename + "." + col + " AS " + col
+    query = query + " FROM " + tablename
     return query
 
 def form_create_part_core_query(cols, target_types, tablename):
@@ -148,8 +156,10 @@ def form_create_part_core_query(cols, target_types, tablename):
 def form_join_part_core_query(cols, target_types, tablename):
     date_col_index = [target_types.index(coltype) for coltype in target_types  if 'date' in coltype][0]
     date_col = cols[date_col_index]
-    query = (" LEFT JOIN c___tablename__ ON CAST(c___tablename__.date as varchar) = __tablename__."
+    date_format = [coltype.replace("date__", "") for coltype in target_types  if 'date' in coltype][0]
+    query = (" LEFT JOIN c___tablename__ ON c___tablename__.date = TO_DATE(__tablename__."
             + date_col
+            + ", '" + date_format + "')"
             + " WHERE c___tablename__.date is NULL;")
     query = query.replace("__tablename__", tablename)
     return query

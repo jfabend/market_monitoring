@@ -10,7 +10,7 @@ from db.get_db_data import GetTableData
 
 # for table in tables
 
-tablename = "futures_dax"
+tablename = "usa_bond_2year"
 query_inspect = "SELECT * FROM __tablename__ LIMIT 3;"
 query_inspect = query_inspect.replace("__tablename__", tablename)
 
