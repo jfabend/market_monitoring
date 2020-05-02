@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS c_futures_dax ( date date, zuletzt double precision, erffn double precision, hoch double precision, tief double precision, vol varchar, leer varchar);
+
+INSERT INTO c_futures_dax
+		SELECT TO_DATE(futures_dax.datum, 'DD.MM.YYYY') AS date, 
+		CAST(REPLACE(REPLACE(futures_dax.zuletzt, '.', ''), ',', '.') AS double precision) AS zuletzt, 
+		CAST(REPLACE(REPLACE(futures_dax.erffn, '.', ''), ',', '.') AS double precision) AS erffn, 
+		CAST(REPLACE(REPLACE(futures_dax.hoch, '.', ''), ',', '.') AS double precision) AS hoch, 
+		CAST(REPLACE(REPLACE(futures_dax.tief, '.', ''), ',', '.') AS double precision) AS tief, 
+		futures_dax.vol AS vol, 
+		futures_dax.leer AS leer 
+	FROM futures_dax LEFT JOIN c_futures_dax ON c_futures_dax.date = TO_DATE(futures_dax.datum, 'DD.MM.YYYY') WHERE c_futures_dax.date is NULL;
+	
+	
+	ERROR:  invalid input syntax for type double precision: "10.688,6"

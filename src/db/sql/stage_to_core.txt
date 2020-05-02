@@ -1,0 +1,7 @@
+CREATE TABLE IF NOT EXISTS __tablename__ (__columnstring__);
+
+INSERT INTO __tablename__
+    SELECT __sta_table__.*
+    FROM   __sta_table__
+    LEFT   JOIN __tablename__ USING (__idcol__)
+    WHERE  __tablename__.__idcol__ IS NULL;
