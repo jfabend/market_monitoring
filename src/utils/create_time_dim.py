@@ -28,8 +28,8 @@ def create_date_table2_date_level(start=pd.Timestamp(year=1920, month=1, day=1),
      df["Year_half"] = (df.Quarter + 1) // 2
      return df
 
-#dim_time_df = create_date_table2_date_level()
+dim_time_df = create_date_table2_date_level()
 #print(dim_time_df.sample(5))
 
-#dim_time_df.to_csv('C:\Data\Trading\market_monitoring\dim_time\dim_time.csv', index=False, sep=';')  
+dim_time_df.to_csv('C:\Data\Trading\market_monitoring\dim_time\dim_time.csv', index=False)  
 

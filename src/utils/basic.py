@@ -53,6 +53,8 @@ def fill_up_query(query_template, colstring, tablename, filepath):
         step_four = step_three.replace("__idcol__", "datum")
     if "date" in colstring:
         step_four = step_three.replace("__idcol__", "date")
+    if colstring is "":
+        step_four = step_three
     return step_four
 
 def delete_na_from_csv(file_path):
