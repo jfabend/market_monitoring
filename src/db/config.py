@@ -12,7 +12,9 @@ class Config():
     def queries(self):
         query_dict = {
             "create_update": self.root + "\\db\\sql\\Insert_Delta.txt",
-            "create_dim_time": self.root + "\\db\\sql\\dim_time.txt"
+            "create_dim_time": self.root + "\\db\\sql\\dim_time.txt",
+            "get_col_data_types": self.root + "\\db\\sql\\col_data_types.txt",
+            "get_dim_time_data_types": self.root + "\\db\\sql\\dim_time_col_data_types.txt"
         }
         return query_dict
 

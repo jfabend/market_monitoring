@@ -5,7 +5,7 @@ sys.path.append(os.getenv("ROOT_DIR"))
 from utils import basic
 from db.join_features import FeatureJoiner
 
-feature_cols = ["c_futures_dax.erffn"]
+feature_cols = ["c_futures_dax.erffn", "c_futures_dax.hoch"]
 
 _FeatureJoiner = FeatureJoiner()
-_FeatureJoiner.feature_join(feature_cols)
+_FeatureJoiner.feature_join(feature_cols, "joinedtable")

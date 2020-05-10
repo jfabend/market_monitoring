@@ -1,0 +1,8 @@
+CREATE TABLE IF NOT EXISTS __exptablename__ (__dim_time_colstring__ __feature_colstring);
+
+INSERT INTO __exptablename__
+    SELECT
+        __dim_time_cols__
+        __feature_cols__
+    FROM dim_time
+    __leftjoin_part__

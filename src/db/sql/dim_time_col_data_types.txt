@@ -1,0 +1,6 @@
+SELECT
+    table_name,
+    column_name,
+    data_type
+FROM information_schema.COLUMNS
+WHERE table_name = 'dim_time';

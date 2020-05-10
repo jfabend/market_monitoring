@@ -1,0 +1,7 @@
+SELECT
+    table_name,
+    column_name,
+    data_type
+FROM information_schema.COLUMNS
+WHERE table_name = '__tablename__'
+AND column_name = '__colname__';
