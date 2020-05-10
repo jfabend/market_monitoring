@@ -1,0 +1,34 @@
+DROP TABLE IF EXISTS tmp; -- else dropped at end of session automatically
+DROP TABLE IF EXISTS dim_time; -- else dropped at end of session automatically
+
+CREATE TABLE IF NOT EXISTS dim_time (
+    date date,
+    weekday varchar,
+    week numeric,
+    quarter numeric,
+    year numeric,
+    month numeric,
+    monthday numeric,
+    year_half  numeric
+);
+
+CREATE TABLE IF NOT EXISTS tmp (    
+    date date,
+    weekday varchar,
+    week numeric,
+    quarter numeric,
+    year numeric,
+    month numeric,
+    monthday numeric,
+    year_half  numeric
+);
+
+COPY tmp FROM '__filepath__' WITH (FORMAT csv, HEADER true, NULL 'NA');
+
+INSERT INTO dim_time
+    SELECT tmp.*
+    FROM   tmp
+    LEFT   JOIN dim_time USING (date)
+    WHERE  dim_time.date IS NULL;
+
+DROP TABLE IF EXISTS tmp; -- else dropped at end of session automatically
