@@ -42,6 +42,7 @@ class FeatureJoiner():
         dim_time_type_df["colstring_dot"] = dim_time_type_df["table_name"] + "." + dim_time_type_df["column_name"] + ", "
         dim_time_colstring = dim_time_type_df["colstring_underscore"].str.cat(sep=' ') #[0:-2]
         dim_time_colstring_dot = dim_time_type_df["colstring_dot"].str.cat(sep=' ') #[0:-2]
+        tmp_colstring = dim_time_colstring_dot.replace("dim_time.", "tmp.dim_time_").replace("date", "dim_time_date").replace("dim_time_dim_time_", "dim_time_")
 
         # Build a string including the features colnames and their datatypes
         feature_colstring = ""
@@ -66,20 +67,35 @@ class FeatureJoiner():
             feature_tables.append(tablename)
         
         # Build CREATE statement
-        create_query = "CREATE TABLE IF NOT EXISTS " + self.exptablename + " (" + dim_time_colstring + " " + feature_colstring + ");"
-        print(create_query)
+        create_query_target = "CREATE TABLE IF NOT EXISTS " + self.exptablename + " (" + dim_time_colstring + " " + feature_colstring + ");"
+        create_query_tmp = "CREATE TABLE IF NOT EXISTS tmp (" + dim_time_colstring + " " + feature_colstring + ");"
+        #print(create_query_target)
+        #print(create_query_tmp)
 
-        # Build INSERT statement
-        insert_query_part_one = ("INSERT INTO " + self.exptablename
+        # Build INSERT tmp statement
+        insert_query_part_one = ("INSERT INTO tmp"
                                 + " ( SELECT " + dim_time_colstring_dot + " " + ', '.join(self.feature_cols)
                                 + " FROM dim_time "
                                 )
         unique_feature_tables = list(set(feature_tables))
         insert_query_part_two = ' '.join([("LEFT JOIN " + feature_table + " ON ( " + feature_table + ".date = dim_time.date)")  for feature_table in unique_feature_tables])
+        insert_query_tmp = insert_query_part_one + insert_query_part_two + ");"
+        #print(insert_query_tmp)
 
-        insert_query = insert_query_part_one + insert_query_part_two + ");"
+        # Build INSERT target statement
+        insert_query_target = ("INSERT INTO " + self.exptablename
+                                + " SELECT " + tmp_colstring + " " + ', '.join(self.feature_cols).replace(".", "__").replace("c_", "tmp.c_")
+                                + " FROM tmp"
+                                + " LEFT JOIN " + self.exptablename + " USING (dim_time_date)"
+                                + " WHERE " + self.exptablename + ".dim_time_date IS NULL;"
+                                )
 
-        print(insert_query)
+        drop_tmp_query = " DROP TABLE IF EXISTS tmp;"
+        final_query = create_query_target + " " +  create_query_tmp + " " + insert_query_tmp + " " + insert_query_target + " " + drop_tmp_query 
+        print(final_query)
+
+        _QueryExecution = QueryExecution(self.conn, self.cur)
+        _QueryExecution.execute_query(final_query)
 
         self.cur.close()
         self.conn.close()
