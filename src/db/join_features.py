@@ -27,15 +27,25 @@ class FeatureJoiner():
         _GetTableData = GetTableData(self.conn, self.cur)
 
         _Config = Config()
+
+        # Read query template for inspecting datatypes of a db table 
         query_path = str(_Config.queries["get_col_data_types"])
         data_type_query = basic.read_query_file(query_path)
 
+        # Read query for inspecting datatypes of the dim_time table
         query_path_dim_time = str(_Config.queries["get_dim_time_data_types"])
         data_type_query_dim_time = basic.read_query_file(query_path_dim_time)
         dim_time_type_df = _GetTableData.create_pandas_table(data_type_query_dim_time)
-        print(dim_time_type_df.head())
 
+        # Build a string including the dim_time colnames and their datatypes
+        dim_time_type_df["colstring_underscore"] = dim_time_type_df["table_name"] + "_" + dim_time_type_df["column_name"] + " " + dim_time_type_df["data_type"] + ", "
+        dim_time_type_df["colstring_dot"] = dim_time_type_df["table_name"] + "." + dim_time_type_df["column_name"] + ", "
+        dim_time_colstring = dim_time_type_df["colstring_underscore"].str.cat(sep=' ') #[0:-2]
+        dim_time_colstring_dot = dim_time_type_df["colstring_dot"].str.cat(sep=' ') #[0:-2]
+
+        # Build a string including the features colnames and their datatypes
         feature_colstring = ""
+        feature_tables = []
         for feature_col in feature_cols:
             idx = feature_cols.index(feature_col)
             tablename = feature_col.split(".")[0]
@@ -52,12 +62,24 @@ class FeatureJoiner():
                                 )
             if idx != (len(feature_cols) - 1):
                 feature_colstring = feature_colstring + ", "
-        
-        print(feature_colstring)
 
-        # BUILD LEFT JOIN STRING
-            # LEFT JOIN PART
-                #"LEFT_JOIN __feature_tablename__ ON (dime_time.date = __feature_tablename__.date);"
+            feature_tables.append(tablename)
+        
+        # Build CREATE statement
+        create_query = "CREATE TABLE IF NOT EXISTS " + self.exptablename + " (" + dim_time_colstring + " " + feature_colstring + ");"
+        print(create_query)
+
+        # Build INSERT statement
+        insert_query_part_one = ("INSERT INTO " + self.exptablename
+                                + " ( SELECT " + dim_time_colstring_dot + " " + ', '.join(self.feature_cols)
+                                + " FROM dim_time "
+                                )
+        unique_feature_tables = list(set(feature_tables))
+        insert_query_part_two = ' '.join([("LEFT JOIN " + feature_table + " ON ( " + feature_table + ".date = dim_time.date)")  for feature_table in unique_feature_tables])
+
+        insert_query = insert_query_part_one + insert_query_part_two + ");"
+
+        print(insert_query)
 
         self.cur.close()
         self.conn.close()
