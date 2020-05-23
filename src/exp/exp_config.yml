@@ -1,0 +1,15 @@
+feature_list:
+  - "c_germany_bond_10year.open"
+  - "c_germany_bond_2year.open"
+  - "c_futures_dax.hoch"
+  - "c_ted_spread_credit_risk.value"
+base_table_name: "c_futures_dax"
+target: "c_futures_dax.hoch"
+models:
+  lm:
+    normalize: "False"
+  #knn:
+  #  k:
+  #    - 3
+  #    - 8
+  #  range: "false"
