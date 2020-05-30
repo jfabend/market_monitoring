@@ -7,29 +7,31 @@ from db.get_dbtable_data import get_dbtable_data
 from utils import basic
 from dataprep import prep_funcs
 
+# Read the pipeline config
 pipe_config_pipe = "\\dataprep\\data_pipe.yml"
 pipe_config = basic.read_config(pipe_config_pipe)
 data = get_dbtable_data("joined_zwei")
 
-
-def mean_by_group(df, cols):
-    return df.groupby(cols).mean()
-
-# pipeline
-#df.pipe(mean_by_group, cols = 'hoch')
-#.pipe(second_function)
-
+# run the pipeline
 def run_pipeline(df):
     tmp_df = df
+
+    # Loop through each steps (pipe_obj) of the pipeline
     for pipe_obj in pipe_config:
+
+        # retrieve the function name of the step
         function = pipe_config.get(pipe_obj).func
         args = dict(pipe_config.get(pipe_obj))
+
+        # retrieve the arguments for the function call
         if len(args) is 1:
             print("no arguments")
             args = None
         else:
             del args['func']
             print(args)
+        
+        # parse the function and call it using the given arguments
         target_func = getattr(prep_funcs, function)
         if args:
             tmp_df = tmp_df.pipe(target_func, **args)
