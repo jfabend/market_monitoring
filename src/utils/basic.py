@@ -6,6 +6,7 @@ import csv
 import string
 import re
 import pandas as pd
+import os
 
 def get_folder_files(foldername, pattern = '*'):
     #return glob.glob(foldername + pattern)
@@ -173,3 +174,11 @@ def form_join_part_core_query(cols, target_types, tablename):
             + " WHERE c___tablename__.date is NULL;")
     query = query.replace("__tablename__", tablename)
     return query
+
+def read_config(path):
+    # Read exp config yml
+    import yaml
+    from box import Box
+    with open(os.getenv("ROOT_DIR") + path, "r") as ymlfile:
+        exp_config = Box(yaml.safe_load(ymlfile))
+    return exp_config

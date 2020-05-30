@@ -1,0 +1,6 @@
+p1:
+  func: 'drop_na_rows'
+p2:
+  func: 'mean_by_group'
+  targetcol: 'c_futures_dax__hoch'
+  groupcols: 'dim_time_year'
