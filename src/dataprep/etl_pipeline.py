@@ -16,6 +16,23 @@ data = get_dbtable_data("joined_zwei")
 
 # run the pipeline
 def run_pipeline(df):
+    """runs a dataprep pipeline consisting of a sequence of several functions transforming a given dataframe.
+
+    This function reads a yml-File and identifies the different function components of the pipeline.
+
+    Each component in the yml-File includes the name of the function which is defined in dataprep.py.
+    In addition to that, the component definition in the yml-File contains also the arguments which
+    should be used when calling the funtion.
+
+    Afterwards, it loops through this components and calls the given functions using the given arguments.
+
+    Arguments:
+        df {pandas dateframe} -- Pandas dataframe
+
+    Returns:
+        A dataframe
+    """
+
     tmp_df = df
 
     # Loop through each steps (pipe_obj) of the pipeline
