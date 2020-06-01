@@ -3,7 +3,9 @@ import sys, os
 from dotenv import load_dotenv
 load_dotenv(verbose=False)
 sys.path.append(os.getenv("ROOT_DIR"))
+
 from db.get_dbtable_data import get_dbtable_data
+from db.write_table import write_table
 from utils import basic
 from dataprep import prep_funcs
 
@@ -41,4 +43,5 @@ def run_pipeline(df):
             print(tmp_df)
     return tmp_df
 
-run_pipeline(data)
+new_df = run_pipeline(data)
+write_table(new_df, "dprep_test")
