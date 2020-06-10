@@ -24,9 +24,9 @@ for ticker in ticker_list:
     df_dreisig['cumsum_diff'] = df_dreisig['close_diff'].cumsum()
 
     ticker_dict = {}
-    ticker_dict['10'] = round(df_zehn['cumsum_diff'][-1], 2)
-    ticker_dict['20'] = round(df_zwanzig['cumsum_diff'][-1], 2)
-    ticker_dict['30']= round(df_dreisig['cumsum_diff'][-1], 2)
+    ticker_dict['last 10 days'] = round(df_zehn['cumsum_diff'][-1], 2)
+    ticker_dict['last 20 days'] = round(df_zwanzig['cumsum_diff'][-1], 2)
+    ticker_dict['last month']= round(df_dreisig['cumsum_diff'][-1], 2)
 
     return_dict[ticker] = ticker_dict
 
