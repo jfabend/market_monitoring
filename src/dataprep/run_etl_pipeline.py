@@ -10,9 +10,9 @@ from utils import basic
 from dataprep import prep_funcs
 
 # Read the pipeline config
-pipe_config_pipe = "\\dataprep\\data_pipe.yml"
+pipe_config_pipe = "\\dataprep\\data_pipe_basis.yml"
 pipe_config = basic.read_config(pipe_config_pipe)
-data = get_dbtable_data("joined_zwei")
+data = get_dbtable_data("basis_use_case")
 
 # run the pipeline
 def run_pipeline(df):
@@ -61,4 +61,6 @@ def run_pipeline(df):
     return tmp_df
 
 new_df = run_pipeline(data)
-write_table(new_df, "dprep_test")
+#print(new_df.iloc[0:50][['c_futures_sp500__hoch', 'c_futures_sp500__3mavg']])
+
+write_table(new_df, "prep_basis_use_case")

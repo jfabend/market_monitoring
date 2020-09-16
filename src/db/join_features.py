@@ -55,11 +55,11 @@ class FeatureJoiner():
             col_type_df = _GetTableData.create_pandas_table(data_type_query_adj)
 
             feature_colstring = (feature_colstring
-                                + col_type_df.ix[0, "table_name"]
+                                + col_type_df.loc[0, "table_name"]
                                 + "__"
-                                + col_type_df.ix[0, "column_name"]
+                                + col_type_df.loc[0, "column_name"]
                                 + " "
-                                + col_type_df.ix[0, "data_type"]
+                                + col_type_df.loc[0, "data_type"]
                                 )
             if idx != (len(feature_cols) - 1):
                 feature_colstring = feature_colstring + ", "

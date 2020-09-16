@@ -1,13 +1,18 @@
 feature_list:
-  - "c_germany_bond_10year.open"
-  - "c_germany_bond_2year.open"
-  - "c_futures_dax.hoch"
-  - "c_ted_spread_credit_risk.value"
-base_table_name: "c_futures_dax"
-target: "c_futures_dax.hoch"
+  - "bond_spread"
+  - "c_leitzins_usa__value"
+  - "c_ted_spread_credit_risk__value"
+  - "c_futures_sp500__50mavg"
+  - "c_futures_sp500__200mavg"
+  - "c_futures_sp500__hoch"
+  - "c_futures_sp500__pdelta"
+table_name: "prep_basis_use_case"
+target: "c_futures_sp500__pdelta_preview3"
 models:
   lm:
-    normalize: "False"
+    normalize:
+      - "False"
+      - "True"
   #knn:
   #  k:
   #    - 3
