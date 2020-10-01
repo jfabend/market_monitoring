@@ -3,8 +3,12 @@ from dotenv import load_dotenv
 load_dotenv(verbose=False)
 sys.path.append(os.getenv("ROOT_DIR"))
 
+import logging
+
 import configparser
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
+
+logging.basicConfig(level = logging.INFO)
 
 def write_table(df, tablename):
     """Writes Pandas Dataframe to a Postgres DB.
@@ -25,6 +29,15 @@ def write_table(df, tablename):
 
     # init sqlalchemy write engine
     engine = create_engine(pg_string)
+
+    # drop table if exists
+    logging.info(f' dropping table {tablename} if it exists')
+    sql = text(f'DROP TABLE IF EXISTS {tablename};')
+    engine.execute(sql)
+    
+
+    # write df to database
+    logging.info(f' writing prepped dataframe to database table {tablename}')
     df.to_sql(tablename, engine)
     
-    print("writing df into db was successful")
+    logging.info("writing df into db was successful")

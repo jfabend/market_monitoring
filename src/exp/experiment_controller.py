@@ -44,12 +44,13 @@ for modelname in exp_config.models:
 #print(data.head())
 #print(feature_list)
 
-experiment = Experiment(data=data,
-                        feature_list=feature_list,
-                        target_col=target,
-                        model=models_to_apply[0],
-                        param_grid=model_params_raw)
+    experiment = Experiment(data=data,
+                            feature_list=feature_list,
+                            target_col=target,
+                            model=models_to_apply[0],
+                            modelname=modelname,
+                            param_grid=model_params_raw)
 #print(type(experiment))
 
 results = experiment.start()
-results.head()
+print(results)

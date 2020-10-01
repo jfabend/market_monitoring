@@ -1,4 +1,6 @@
 from sklearn import linear_model
+from sklearn.ensemble import RandomForestClassifier
+from xgboost import XGBRegressor
 
 class Model():
 
@@ -6,6 +8,10 @@ class Model():
         self.model_name = model_name
     
     def return_model(self):
-        if self.model_name == "lm":
+        if self.model_name == "linearmodel":
             model = linear_model.LinearRegression()
+        if self.model_name == "randomforestregressor":
+            model = RandomForestClassifier()
+        if self.model_name == "xgboostregressor":
+            model = XGBRegressor(objective='reg:squarederror')
         return model

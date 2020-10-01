@@ -1,5 +1,6 @@
 import pandas as pd
 import sys, os
+import logging
 from dotenv import load_dotenv
 load_dotenv(verbose=False)
 sys.path.append(os.getenv("ROOT_DIR"))
@@ -9,10 +10,16 @@ from db.write_table import write_table
 from utils import basic
 from dataprep import prep_funcs
 
+logging.basicConfig(level = logging.INFO)
+
 # Read the pipeline config
-pipe_config_pipe = "\\dataprep\\data_pipe_basis.yml"
+pipe_config_pipe = "\\dataprep\\data_pipe_basis_zwei.yml"
 pipe_config = basic.read_config(pipe_config_pipe)
-data = get_dbtable_data("basis_use_case")
+db_table_name = "basis_use_case_zwei"
+data = get_dbtable_data(db_table_name)
+
+logging.info(f' Prep pipeline to run: {pipe_config_pipe}')
+logging.info(f' Database table used for prep pipeline: {db_table_name}')
 
 # run the pipeline
 def run_pipeline(df):
@@ -63,4 +70,4 @@ def run_pipeline(df):
 new_df = run_pipeline(data)
 #print(new_df.iloc[0:50][['c_futures_sp500__hoch', 'c_futures_sp500__3mavg']])
 
-write_table(new_df, "prep_basis_use_case")
+write_table(new_df, "prep_basis_use_case_zwei")

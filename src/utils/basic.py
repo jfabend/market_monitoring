@@ -136,7 +136,7 @@ def value_sample_pd_table(pd_df):
     """
     col_list = list(pd_df.columns)   # - with colnames
     # result = [pd_df.loc[[0], [col]] for col in col_list] - first cell, but including colname
-    result = [pd_df.ix[0, col] for col in col_list]   # first cell value
+    result = [pd_df.loc[0, col] for col in col_list]   # first cell value
     return result
 
 def cols_pd_table(pd_df):

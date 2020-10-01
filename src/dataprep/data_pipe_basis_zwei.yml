@@ -1,0 +1,67 @@
+p1:
+  func: 'drop_na_rows'
+# Create Spread between 10 year bonds and 2 year bonds
+p2:
+  func: 'new_col_substract'
+  base_col: 'c_usa_bond_2year__open'
+  sub_col: 'c_usa_bond_10year__open'
+  new_col: 'bond_spread'
+# Create 1 Day percent delta - shift this for getting the target
+p3:
+  func: 'new_col_percent_delta'
+  base_col: 'c_sp500__high'
+  new_col: 'c_sp500__pdelta_1'
+  days: 1
+p4:
+  func: 'shift_col_preview'
+  base_col: 'c_sp500__pdelta_1'
+  new_col: 'c_sp500__pdelta_preview1'
+  days: 1
+# Calculate the moving averages for 50 and 200 days
+p5:
+  func: 'rolling_mean'
+  base_col: 'c_sp500__high'
+  new_col: 'c_sp500__50mavg'
+  days: 50
+p6:
+  func: 'rolling_mean'
+  base_col: 'c_sp500__high'
+  new_col: 'c_sp500__200mavg'
+  days: 200
+# Calculate difference between sp500 and the moving averages
+p7:
+  func: 'new_col_substract'
+  base_col: 'c_sp500__high'
+  sub_col: 'c_sp500__200mavg'
+  new_col: 'diff_sp500_200mavg'
+p8:
+  func: 'new_col_substract'
+  base_col: 'c_sp500__high'
+  sub_col: 'c_sp500__50mavg'
+  new_col: 'diff_sp500_50mavg'
+# Create two momentum features
+p9:
+  func: 'new_col_percent_delta'
+  base_col: 'c_sp500__high'
+  new_col: 'c_sp500__momentum3'
+  days: 3
+p10:
+  func: 'new_col_percent_delta'
+  base_col: 'c_sp500__high'
+  new_col: 'c_sp500__momentum5'
+  days: 5
+#p11:
+#  func: 'standardscaling'
+#  cols:
+#    - "bond_spread"
+#    - "c_leitzins_usa__value"
+#    - "c_ted_spread_credit_risk__value"
+#    - "diff_sp500_50mavg"
+#    - "diff_sp500_200mavg"
+#    - "c_sp500__momentum3"
+#    - "c_sp500__momentum5"
+#    - "c_sp500__volume"
+#    - "c_vix__high"
+#    - "c_usa_bond_10year__open"
+p11:
+  func: 'drop_na_rows'

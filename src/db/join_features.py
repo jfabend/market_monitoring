@@ -4,6 +4,7 @@ load_dotenv(verbose=False)
 sys.path.append(os.getenv("ROOT_DIR"))
 import pandas as pd
 import numpy as np
+import logging
 
 from utils import basic
 from db.config import Config
@@ -24,6 +25,11 @@ class FeatureJoiner():
         self.cur = self.connection_objects[1]
         self.feature_cols = feature_cols
         self.exptablename = exptablename
+
+        logging.basicConfig(level = logging.INFO)
+
+        # create console handler and set level to debug
+
         _GetTableData = GetTableData(self.conn, self.cur)
 
         _Config = Config()
@@ -48,6 +54,8 @@ class FeatureJoiner():
         feature_colstring = ""
         feature_tables = []
         for feature_col in feature_cols:
+            logging.info(f'adding {feature_col} to feature_col_string for joining')
+            #print(f'adding {feature_col} to feature_col_string for joining')
             idx = feature_cols.index(feature_col)
             tablename = feature_col.split(".")[0]
             colname = feature_col.split(".")[1]
@@ -55,11 +63,11 @@ class FeatureJoiner():
             col_type_df = _GetTableData.create_pandas_table(data_type_query_adj)
 
             feature_colstring = (feature_colstring
-                                + col_type_df.loc[0, "table_name"]
+                                + col_type_df.iloc[0]["table_name"]
                                 + "__"
-                                + col_type_df.loc[0, "column_name"]
+                                + col_type_df.iloc[0]["column_name"]
                                 + " "
-                                + col_type_df.loc[0, "data_type"]
+                                + col_type_df.iloc[0]["data_type"]
                                 )
             if idx != (len(feature_cols) - 1):
                 feature_colstring = feature_colstring + ", "

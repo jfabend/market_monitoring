@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 load_dotenv(verbose=False)
 sys.path.append(os.getenv("ROOT_DIR"))
 
+from sklearn.preprocessing import StandardScaler
+
 from utils import basic
 from db.get_dbtable_data import get_dbtable_data
 
@@ -57,3 +59,7 @@ def remove_by_value(df, base_col, value):
     df = df[df[base_col] != value]
     return df
 
+def standardscaling(df, cols):
+    scaler = StandardScaler().fit(df[cols])
+    X_train_scaled = scaler.transform(df[cols])
+    return X_train_scaled
