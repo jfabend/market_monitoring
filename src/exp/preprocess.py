@@ -14,29 +14,48 @@ from utils import basic
 
 
 def get_preprocessing_pipe(filename):
-    pipe_config = basic.read_config(filename)
 
-    logging.info(f' Preprocess pipeline to run: {pipe_config}')
+    pipe_config = []
+    try:
+        pipe_config = basic.read_config(filename)
+        logging.info(f' Preprocess pipeline to run: {pipe_config}')
+    except:
+        logging.info('No preprocess steps were defined in the preprocess yml file')
 
-    preprocess_tuple_list = []    
 
-    for pipe_obj in pipe_config:
+    preprocess_tuple_list = []
+  
+    if len(pipe_config) > 0:
+        for pipe_obj in pipe_config:
 
-        # retrieve the function name of the step
-        function = pipe_config.get(pipe_obj).func
-        #args = dict(pipe_config.get(pipe_obj))
+            # retrieve the function name of the step
+            function = pipe_config.get(pipe_obj).func
+            args = dict(pipe_config.get(pipe_obj))
 
-        if function == 'pca':
-            pca = PCA()
-            preprocess_tuple_list.append(('pca', pca))
+            if function == 'pca':
+                pca = PCA()
+                preprocess_tuple_list.append(('pca', pca))
+            
+            if function == 'minmaxscaler':
+                if len(args) == 1:
+                    mmsc = MinMaxScaler()
+                else:
+                    args.pop('func')
+                    mmsc = MinMaxScaler(**args)
+                preprocess_tuple_list.append(('mmsc', mmsc))
 
-        #mmsc = MinMaxScaler(feature_range=(0, 10))
-        #ohe = ColumnTransformer([("dim_time_month_new", OneHotEncoder(), [-1])], remainder = 'passthrough')
-        #pca = PCA()
+            if function == 'onehotencoding':
+                cols = args['cols']
+                for col in cols:
+                    ohe = ColumnTransformer([(col, OneHotEncoder(categories='auto'), [-1])], remainder = 'passthrough')
+                    preprocess_tuple_list.append(('ohe', ohe))
 
-        #steps = [('pca', pca), (self.modelname, self.model)]
-        #steps = [('std', std), (self.modelname, self.model)]
-        #steps = [('mmsc', mmsc), ('ohe', ohe), (self.modelname, self.model)]
-        #steps = [('mmsc', mmsc), (self.modelname, self.model)]
-        #steps = [(self.modelname, self.model)]
+            #ohe = ColumnTransformer([("dim_time_month_new", OneHotEncoder(), [-1])], remainder = 'passthrough')
+            #pca = PCA()
+
+            #steps = [('pca', pca), (self.modelname, self.model)]
+            #steps = [('std', std), (self.modelname, self.model)]
+            #steps = [('mmsc', mmsc), ('ohe', ohe), (self.modelname, self.model)]
+            #steps = [('mmsc', mmsc), (self.modelname, self.model)]
+            #steps = [(self.modelname, self.model)]
     return preprocess_tuple_list
