@@ -4,3 +4,5 @@ python-dotenv = 0.12.0
 psycopg2
 pandas
 python-box
+dtale
+jupyter

@@ -63,3 +63,16 @@ def standardscaling(df, cols):
     scaler = StandardScaler().fit(df[cols])
     X_train_scaled = scaler.transform(df[cols])
     return X_train_scaled
+
+def less_greater_encoding(df, base_col, new_col, threshold):
+    def func(row):
+        if row[base_col] >= threshold:
+            return 1
+        else:
+            return 0
+
+    df[new_col] = df.apply(func, axis=1)
+
+def two_cols_percent_delta(df, base_col, second_col, new_col):
+    df[new_col] = (df[second_col] / df[base_col]) * 100 - 100
+    return df

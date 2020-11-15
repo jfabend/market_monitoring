@@ -7,7 +7,7 @@ feature_list:
   - "c_sp500__momentum3"
   - "c_sp500__momentum5"
   - "c_sp500__volume"
-  #- "c_vix__high"
+  - "c_vix__high"
   - "c_usa_bond_10year__open"
   - "dim_time_month"
 table_name: "prep_basis_use_case_zwei"
