@@ -14,4 +14,6 @@ class Model():
             model = RandomForestClassifier()
         if self.model_name == "xgboostregressor":
             model = XGBRegressor(objective='reg:squarederror')
+        if self.model_name == "logisticregression":
+            model = linear_model.LogisticRegression()
         return model

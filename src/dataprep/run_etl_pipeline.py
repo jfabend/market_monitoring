@@ -13,7 +13,7 @@ from dataprep import prep_funcs
 logging.basicConfig(level = logging.INFO)
 
 # Read the pipeline config
-pipe_config_pipe = "\\dataprep\\data_pipe_basis_zwei.yml"
+pipe_config_pipe = "\\dataprep\\data_pipe_20201115.yml"
 pipe_config = basic.read_config(pipe_config_pipe)
 db_table_name = "basis_use_case_zwei"
 data = get_dbtable_data(db_table_name)
@@ -45,6 +45,8 @@ def run_pipeline(df):
     # Loop through each steps (pipe_obj) of the pipeline
     for pipe_obj in pipe_config:
 
+        logging.info(f' Pipe Step: {pipe_obj}')
+
         # retrieve the function name of the step
         function = pipe_config.get(pipe_obj).func
         args = dict(pipe_config.get(pipe_obj))
@@ -61,13 +63,13 @@ def run_pipeline(df):
         target_func = getattr(prep_funcs, function)
         if args:
             tmp_df = tmp_df.pipe(target_func, **args)
-            print(tmp_df)
+            #print(tmp_df)
         else:
             tmp_df = tmp_df.pipe(target_func)
-            print(tmp_df)
+            #print(tmp_df)
     return tmp_df
 
 new_df = run_pipeline(data)
 #print(new_df.iloc[0:50][['c_futures_sp500__hoch', 'c_futures_sp500__3mavg']])
 
-write_table(new_df, "prep_basis_use_case_zwei")
+write_table(new_df, "prepped_20201115")

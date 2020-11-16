@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import sys, os
 from dotenv import load_dotenv
 load_dotenv(verbose=False)
@@ -72,7 +73,19 @@ def less_greater_encoding(df, base_col, new_col, threshold):
             return 0
 
     df[new_col] = df.apply(func, axis=1)
+    return df
 
 def two_cols_percent_delta(df, base_col, second_col, new_col):
     df[new_col] = (df[second_col] / df[base_col]) * 100 - 100
+    return df
+
+def keep_dtype_only(df, base_col, dtype):
+    def type_check(x):
+        return type(x) is eval(dtype)
+
+    df = df[df[base_col].apply(lambda x: type_check(x))]
+    return df
+
+def set_col_dtype(df, base_col, dtype):
+    df[base_col] = df[base_col].astype(dtype)
     return df

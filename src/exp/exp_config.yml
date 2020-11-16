@@ -1,18 +1,21 @@
 feature_list:
-  - "bond_spread"
-  - "c_leitzins_usa__value"
-  - "c_ted_spread_credit_risk__value"
-  - "diff_sp500_50mavg"
-  - "diff_sp500_200mavg"
-  - "c_sp500__momentum3"
-  - "c_sp500__momentum5"
-  - "c_sp500__volume"
-  - "c_vix__high"
-  - "c_usa_bond_10year__open"
-  - "dim_time_month"
-table_name: "prep_basis_use_case_zwei"
-target: "c_sp500__pdelta_preview1"
-models:
+  #- "bond_spread"
+  #- "c_leitzins_usa__value"
+  #- "c_ted_spread_credit_risk__value"
+  #- "diff_sp500_50mavg"
+  #- "diff_sp500_200mavg"
+  #- "c_sp500__momentum3"
+  #- "c_sp500__momentum5"
+  #- "c_sp500__volume"
+  #- "c_vix__high"
+  #- "c_usa_bond_10year__open"
+  #- "dim_time_month"
+  - "credit_risk_100mavg"
+  - "c_vix__50mavg"
+  - "bond_spread__200mavg"
+table_name: "prepped_20201115"
+target: "sp500_mavg_higher_lower"
+models: "logisticregression"
   #linearmodel:
   #  linearmodel__normalize:
   #    - "False"
@@ -27,13 +30,13 @@ models:
   #    - 5
   #  n_estimators:
   #    - 30
-  xgboostregressor:
-    xgboostregressor__eta:
-      - 0.01
-    xgboostregressor__max_depth:
-      - 15
-    xgboostregressor__booster:
-      - 'gbtree'
-      #- 'gblinear'
-    xgboostregressor__min_child_weight:
-      - 6
+  #xgboostregressor:
+  #  xgboostregressor__eta:
+  #    - 0.01
+  #  xgboostregressor__max_depth:
+  #    - 15
+  #  xgboostregressor__booster:
+  #    - 'gbtree'
+  #    #- 'gblinear'
+  #  xgboostregressor__min_child_weight:
+  #    - 6

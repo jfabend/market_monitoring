@@ -26,31 +26,52 @@ target = exp_config.target
 
 # Prepair model and param grid
 models_to_apply = []
-for modelname in exp_config.models:
 
-    # Create sklearn model object according to given model name
-    # without any params (without further info, default values would be used)
-    next_model_class = Model(model_name = modelname)
-    next_model_object = next_model_class.return_model()
-    models_to_apply.append(next_model_object)
+if type(exp_config.models) is str:
+  modelname = exp_config.models
 
-    model_params_raw = exp_config.models.get(modelname)
+  # Create sklearn model object according to given model name
+  # without any params (without further info, default values would be used)
+  next_model_class = Model(model_name = modelname)
+  next_model_object = next_model_class.return_model()
+  models_to_apply.append(next_model_object)
 
-  # Ich mache einen Datenerzeugungsschritt
-    # Da wird die Feature Tabelle erzeugt
-    # Dann wird über die Model Param Grids geloopt
+  model_params_raw = "none"
 
-#print(str(dict(model_params_raw)))
-#print(data.head())
-#print(feature_list)
+  experiment = Experiment(data=data,
+                          feature_list=feature_list,
+                          target_col=target,
+                          model=models_to_apply[0],
+                          modelname=modelname,
+                          param_grid=model_params_raw)
+  results = experiment.start()
 
-    experiment = Experiment(data=data,
-                            feature_list=feature_list,
-                            target_col=target,
-                            model=models_to_apply[0],
-                            modelname=modelname,
-                            param_grid=model_params_raw)
-#print(type(experiment))
+else:
+  for modelname in exp_config.models:
 
-results = experiment.start()
+      # Create sklearn model object according to given model name
+      # without any params (without further info, default values would be used)
+      next_model_class = Model(model_name = modelname)
+      next_model_object = next_model_class.return_model()
+      models_to_apply.append(next_model_object)
+
+      model_params_raw = exp_config.models.get(modelname)
+
+    # Ich mache einen Datenerzeugungsschritt
+      # Da wird die Feature Tabelle erzeugt
+      # Dann wird über die Model Param Grids geloopt
+
+  #print(str(dict(model_params_raw)))
+  #print(data.head())
+  #print(feature_list)
+
+      experiment = Experiment(data=data,
+                              feature_list=feature_list,
+                              target_col=target,
+                              model=models_to_apply[0],
+                              modelname=modelname,
+                              param_grid=model_params_raw)
+  #print(type(experiment))
+
+  results = experiment.start()
 print(results)

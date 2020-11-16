@@ -1,6 +1,9 @@
 from sklearn import model_selection as ms
 #from sklearn.pipeline import make_pipeline
-from sklearn.pipeline import Pipeline 
+from sklearn.pipeline import Pipeline
+from sklearn.pipeline import make_pipeline
+from sklearn.model_selection import cross_validate 
+
 from preprocess import get_preprocessing_pipe
 
 import pandas as pd
@@ -39,9 +42,12 @@ class Experiment():
         preprocess_tuples.append(model_tuple)
         pipe = Pipeline(steps = preprocess_tuples)
 
-        grid = ms.GridSearchCV(pipe, self.param_grid, cv=10, scoring ='r2', return_train_score=False)
-        grid.fit(self.feature_data, self.target_data)
-
-        results = pd.DataFrame(grid.cv_results_)[['mean_test_score', 'std_test_score', 'params']] 
-        print(grid.best_params_)
+        if self.param_grid == "none":
+            results = cross_validate(pipe, self.feature_data, self.target_data, cv=10, scoring ='accuracy')
+            
+        else:
+            grid = ms.GridSearchCV(pipe, self.param_grid, cv=10, scoring ='accuracy', return_train_score=False)
+            grid.fit(self.feature_data, self.target_data)
+            results = pd.DataFrame(grid.cv_results_)[['mean_test_score', 'std_test_score', 'params']] 
+            print(grid.best_params_)
         return results

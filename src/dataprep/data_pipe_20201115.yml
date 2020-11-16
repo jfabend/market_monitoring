@@ -1,21 +1,30 @@
 p1:
   func: 'drop_na_rows'
+p98:
+  func: set_col_dtype
+  base_col: c_vix__high
+  dtype: float
 # Create 1 Day percent delta - shift this for getting the target
+p50:
+  func: 'rolling_mean'
+  base_col: 'c_sp500__high'
+  new_col: 'c_sp500__40mavg'
+  days: 40
 p2:
   func: 'new_col_percent_delta'
-  base_col: 'c_sp500__high'
-  new_col: 'c_sp500__pdelta_1'
+  base_col: 'c_sp500__40mavg'
+  new_col: 'c_sp500_40mavg_pdelta_1'
   days: 1
 p3:
   func: 'shift_col_preview'
-  base_col: 'c_sp500__pdelta_1'
-  new_col: 'c_sp500__pdelta_preview1'
+  base_col: 'c_sp500_40mavg_pdelta_1'
+  new_col: 'c_sp500_40mavg_pdelta_preview1'
   days: 1
 # TARGET column:
 p4:
   func: 'less_greater_encoding'
-  base_col: 'c_sp500__pdelta_preview1'
-  new_col: 'sp500_higher_lower'
+  base_col: 'c_sp500_40mavg_pdelta_preview1'
+  new_col: 'sp500_mavg_higher_lower'
   threshold: 0
 # Calculate the moving averages for 50 and 200 days
 p5:
@@ -50,6 +59,10 @@ p10:
   base_col: 'c_sp500__high'
   new_col: 'c_sp500__momentum5'
   days: 5
+#p99:
+#  func: 'keep_dtype_only'
+#  base_col: 'c_vix__high'
+#  dtype: float
 # VIX Base Columns
 p11:
   func: 'new_col_percent_delta'
@@ -104,7 +117,7 @@ p20:
   base_col: 'bond_spread__200mavg'
   new_col: 'bond_spread200_halfyear_delta'
   days: 125
-# Credit Risk Base Column
+ #Credit Risk Base Column
 p21:
   func: 'rolling_mean'
   base_col: 'c_ted_spread_credit_risk__value'
@@ -126,7 +139,7 @@ p24:
   base_col: 'credit_risk_100mavg'
   new_col: 'credit_risk_3month_delta'
   days: 63
-# Leitzins Feature Columns
+ #Leitzins Feature Columns
 p25:
   func: 'new_col_percent_delta'
   base_col: 'c_leitzins_usa__value'
