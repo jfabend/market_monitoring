@@ -108,12 +108,15 @@ def fill_up_query(query_template, colstring, tablename, filepath):
     step_one = query_template.replace("__columnstring__", colstring)
     step_two = step_one.replace("__tablename__", tablename)
     step_three = step_two.replace("__filepath__", filepath)
-    if "datum" in colstring:
-        step_four = step_three.replace("__idcol__", "datum")
-    if "date" in colstring:
-        step_four = step_three.replace("__idcol__", "date")
-    if colstring is "":
-        step_four = step_three
+    step_four = step_three.replace("__idcol__", colstring.split(" ")[1])
+    #if "datum" in colstring:
+    #    step_four = step_three.replace("__idcol__", colstring[0])
+    #if "date" in colstring:
+    #    step_four = step_three.replace("__idcol__", colstring[0])
+    #if colstring is "":
+    #    step_four = step_three
+    #else:
+    #    step_four = step_three
     return step_four
 
 def delete_na_from_csv(file_path):
@@ -165,10 +168,18 @@ def string_to_sql_type(string):
     # date regex
     german_date_one = re.findall('^\d\d\.\d\d\.20\d\d$', string)
     german_date_two = re.findall('^\d\d\.\d\d\.19\d\d$', string)
-    us_date_one = re.findall('^19\d\d-\d\d-\d\d$', string)
-    us_date_two = re.findall('^20\d\d-\d\d-\d\d$', string)
+    #us_date_one = re.findall('^19\d\d-\d\d-\d\d$', string)
+    us_date_one = re.findall('^19\d\d-(0[1-9]|1[012])-\d\d$', string)
+    #us_date_two = re.findall('^20\d\d-\d\d-\d\d$', string)
+    us_date_two = re.findall('^20\d\d-(0[1-9]|1[012])-\d\d$', string)
     us_date_three = re.findall('^\D{3} \d\d, 20\d\d$', string)
     us_date_four = re.findall('^\D{3} \d\d, 19\d\d$', string)
+    us_date_five = re.findall('^\d\d-\D{3}-19\d\d', string)
+    us_date_six = re.findall('^\d\d-\D{3}-20\d\d', string)
+    us_date_seven = re.findall('^(0[1-9]|1[012])/(0[1-9]|[12][0-9]|3[01])/(19|20)\d\d$', string)
+    us_date_eight = re.findall('(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/(19|20)\d\d$', string)
+
+    #us_date_seven = re.findall()
 
     # float regex
     us_decimal_one = re.findall('^\d+.\d{1,2}$', string)               # 29.99
@@ -189,6 +200,12 @@ def string_to_sql_type(string):
         return 'date__YYYY-MM-DD'
     if us_date_three or us_date_four:
         return 'date__Mon DD, YYYY'
+    if us_date_five or us_date_six:
+        return 'date__DD-Mon-YYYY'
+    if us_date_seven:
+        return 'date__MM/DD/YYYY'
+    if us_date_eight:
+        return 'date__DD/MM/YYYY'
     if us_decimal_one or us_decimal_two or us_decimal_three or us_decimal_four:
         return 'us_decimal'
     if numeric_one or us_numeric_one or eu_numeric_one:
