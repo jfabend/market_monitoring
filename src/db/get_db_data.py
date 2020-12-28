@@ -16,8 +16,17 @@ class GetTableData():
         self.conn = conn
         self.cur = cur
 
-    # A function that takes in a PostgreSQL query and outputs a pandas database 
+
     def create_pandas_table(self, sql_query):
+        """A function that takes a PostgreSQL select query
+        and returns a pandas dataframe including the selected data
+
+        Args:
+            sql_query (str): select statement
+
+        Returns:
+            pandas df: data returned by the select query
+        """
         table = pd.read_sql_query(sql_query, self.conn)
         return table
 

@@ -8,6 +8,14 @@ import re
 import pandas as pd
 import os
 
+import sys, os
+from dotenv import load_dotenv
+load_dotenv(verbose=False)
+sys.path.append(os.getenv("ROOT_DIR"))
+from db.config import Config
+from db.connect_db import DbConnection
+from db.execute_query import QueryExecution
+
 def get_folder_files(foldername, pattern = '*'):
     """returns a list of the names of the files in the given folder.
 
@@ -340,3 +348,13 @@ def read_config(path):
     with open(os.getenv("ROOT_DIR") + path, "r") as ymlfile:
         exp_config = Box(yaml.safe_load(ymlfile))
     return exp_config
+
+def setup_db_connection():
+    dbini_path = os.getenv("ROOT_DIR")
+    my_DbConnection = DbConnection(dbini_path)
+    connection_objects = my_DbConnection.setup_connection()
+    conn = connection_objects[0]
+    cur = connection_objects[1]
+
+    # return connection and cursor
+    return conn, cur

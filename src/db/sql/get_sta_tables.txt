@@ -1,0 +1,2 @@
+select table_name from information_schema.tables
+WHERE LEFT(table_name, 4) = 'sta_';
