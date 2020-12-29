@@ -15,7 +15,8 @@ class Config():
             "create_dim_time": self.root + "\\db\\sql\\dim_time.txt",
             "get_col_data_types": self.root + "\\db\\sql\\col_data_types.txt",
             "get_dim_time_data_types": self.root + "\\db\\sql\\dim_time_col_data_types.txt",
-            "get_sta_tables": self.root + "\\db\\sql\\get_sta_tables.txt"
+            "get_sta_tables": self.root + "\\db\\sql\\get_sta_tables.txt",
+            "select_table_sample": self.root + "\\db\\sql\\select_table_sample.txt"
         }
         return query_dict
 

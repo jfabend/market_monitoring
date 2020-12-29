@@ -184,8 +184,10 @@ def string_to_sql_type(string):
     us_date_four = re.findall('^\D{3} \d\d, 19\d\d$', string)
     us_date_five = re.findall('^\d\d-\D{3}-19\d\d', string)
     us_date_six = re.findall('^\d\d-\D{3}-20\d\d', string)
-    us_date_seven = re.findall('^(0[1-9]|1[012])/(0[1-9]|[12][0-9]|3[01])/(19|20)\d\d$', string)
-    us_date_eight = re.findall('(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[012])/(19|20)\d\d$', string)
+    us_date_seven = re.findall('^(0[1-9]|1[0-2])/(0[1-9]|[12]\d|3[01])/([12]\d{3})$', string)
+    us_date_eight = re.findall('^(0[1-9]|[12]\d|3[01])/(0[1-9]|1[0-2])/([12]\d{3})$', string)
+    us_date_nine = re.findall('^([1-9]|1[0-2])/([1-9]|[12]\d|3[01])/([12]\d{3})$', string)
+    us_date_ten = re.findall('^([1-9]|[12]\d|3[01])/([1-9]|1[0-2])/([12]\d{3})$', string)
 
     #us_date_seven = re.findall()
 
@@ -214,6 +216,10 @@ def string_to_sql_type(string):
         return 'date__MM/DD/YYYY'
     if us_date_eight:
         return 'date__DD/MM/YYYY'
+    if us_date_nine:
+        return 'date__M/D/YYYY'
+    if us_date_ten:
+        return 'date__D/M/YYYY'
     if us_decimal_one or us_decimal_two or us_decimal_three or us_decimal_four:
         return 'us_decimal'
     if numeric_one or us_numeric_one or eu_numeric_one:
