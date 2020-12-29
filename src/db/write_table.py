@@ -32,12 +32,12 @@ def write_table(df, tablename):
 
     # drop table if exists
     logging.info(f' dropping table {tablename} if it exists')
-    sql = text(f'DROP TABLE IF EXISTS {tablename};')
+    drop_str = 'DROP TABLE IF EXISTS __tablename__;'
+    sql = text(drop_str.replace('__tablename__', tablename))
     engine.execute(sql)
-    
 
     # write df to database
     logging.info(f' writing prepped dataframe to database table {tablename}')
-    df.to_sql(tablename, engine)
+    df.to_sql(tablename, engine, index=False)
     
     logging.info("writing df into db was successful")

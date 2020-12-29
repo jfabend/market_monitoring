@@ -1,7 +1,7 @@
 #!/usr/bin/python
 
 # minimal run:
-# python .\src\runs\upload.py -i 'C:\Data\Trading\market_monitoring\data'
+# python .\src\runs\run_upload.py -i 'C:\Data\Trading\market_monitoring\data'
 
 import sys, getopt, os
 from dotenv import load_dotenv
