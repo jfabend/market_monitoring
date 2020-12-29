@@ -13,7 +13,7 @@ from db.get_db_data import GetTableData
 
 def get_dbtable_data(tablename):
 
-    connection_objects = basic.setup_db_connection
+    connection_objects = basic.setup_db_connection()
     conn = connection_objects[0]
     cur = connection_objects[1]
     _GetTableData = GetTableData(conn, cur)
