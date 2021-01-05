@@ -36,15 +36,20 @@ class Experiment():
 
 # Perfom gridsearch cross validation and evaluation
     def start(self):
-
+        
+        # initialize scikit model tuple
         model_tuple = (self.modelname, self.model)
+
+        # initiailze preprocess tuple and append it to the model tuple
         preprocess_tuples = get_preprocessing_pipe(filename="\\exp\\preprocess_pipe.yml")
         preprocess_tuples.append(model_tuple)
         pipe = Pipeline(steps = preprocess_tuples)
 
+        # if there is no param grid, start the simple scikit cross_validate()
         if self.param_grid == "none":
             results = cross_validate(pipe, self.feature_data, self.target_data, cv=10, scoring ='accuracy')
-            
+
+        # if there is a param grid, start scikit GridSearchCV()    
         else:
             grid = ms.GridSearchCV(pipe, self.param_grid, cv=10, scoring ='accuracy', return_train_score=False)
             grid.fit(self.feature_data, self.target_data)

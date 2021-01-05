@@ -24,9 +24,10 @@ data = get_dbtable_data(exp_config.table_name)
 feature_list = exp_config.feature_list
 target = exp_config.target
 
-# Prepair model and param grid
+# Prepair an empty list for all models to be applied
 models_to_apply = []
 
+# Check if models contains only one modelname
 if type(exp_config.models) is str:
   modelname = exp_config.models
 
@@ -36,6 +37,7 @@ if type(exp_config.models) is str:
   next_model_object = next_model_class.return_model()
   models_to_apply.append(next_model_object)
 
+  # Create empty param grid
   model_params_raw = "none"
 
   experiment = Experiment(data=data,
@@ -46,6 +48,7 @@ if type(exp_config.models) is str:
                           param_grid=model_params_raw)
   results = experiment.start()
 
+# ... or if the models contain models with pararms
 else:
   for modelname in exp_config.models:
 
@@ -55,15 +58,8 @@ else:
       next_model_object = next_model_class.return_model()
       models_to_apply.append(next_model_object)
 
+      # create param grid for current model
       model_params_raw = exp_config.models.get(modelname)
-
-    # Ich mache einen Datenerzeugungsschritt
-      # Da wird die Feature Tabelle erzeugt
-      # Dann wird über die Model Param Grids geloopt
-
-  #print(str(dict(model_params_raw)))
-  #print(data.head())
-  #print(feature_list)
 
       experiment = Experiment(data=data,
                               feature_list=feature_list,
@@ -71,7 +67,6 @@ else:
                               model=models_to_apply[0],
                               modelname=modelname,
                               param_grid=model_params_raw)
-  #print(type(experiment))
 
   results = experiment.start()
 print(results)

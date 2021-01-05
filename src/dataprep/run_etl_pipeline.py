@@ -70,6 +70,5 @@ def run_pipeline(df):
     return tmp_df
 
 new_df = run_pipeline(data)
-#print(new_df.iloc[0:50][['c_futures_sp500__hoch', 'c_futures_sp500__3mavg']])
 
 write_table(new_df, "prepped_20201115")
