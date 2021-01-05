@@ -116,13 +116,15 @@ def fill_up_query(query_template, colstring, tablename, filepath):
     step_one = query_template.replace("__columnstring__", colstring)
     step_two = step_one.replace("__tablename__", tablename)
     step_three = step_two.replace("__filepath__", filepath)
-    step_four = step_three.replace("__idcol__", colstring.split(" ")[1])
+    if colstring is '':
+        step_four = step_three
+    else:
+        step_four = step_three.replace("__idcol__", colstring.split(" ")[1])
     #if "datum" in colstring:
     #    step_four = step_three.replace("__idcol__", colstring[0])
     #if "date" in colstring:
     #    step_four = step_three.replace("__idcol__", colstring[0])
-    #if colstring is "":
-    #    step_four = step_three
+
     #else:
     #    step_four = step_three
     return step_four
