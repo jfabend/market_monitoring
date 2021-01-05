@@ -32,9 +32,8 @@ def write_table(df, tablename):
 
     # drop table if exists
     logging.info(f' dropping table {tablename} if it exists')
-    #drop_str = 'DROP TABLE IF EXISTS __tablename__;'
-    #sql = text(drop_str.replace('__tablename__', tablename))
-    sql = text('DROP TABLE IF EXISTS sta_putcall_vix;')
+    drop_str = 'DROP TABLE IF EXISTS __tablename__;'
+    sql = text(drop_str.replace('__tablename__', tablename))
     engine.execute(sql)
 
     # write df to database
