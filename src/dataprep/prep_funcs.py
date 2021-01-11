@@ -53,12 +53,15 @@ def shift_cols_preview(df, cols, days):
         df[new_col_name] = df[col].shift(-days)
     return df
 
-def rolling_mean(df, base_col, new_col, days):
-    df[new_col] = df[base_col].rolling(days).mean() 
+def rolling_mean(df, cols, days):
+    for col in cols:
+        new_col_name = col + "_mavg_" + str(days)
+        df[new_col_name] = df[col].rolling(days).mean() 
     return df
 
-def remove_by_value(df, base_col, value):
-    df = df[df[base_col] != value]
+def remove_by_value(df, cols, value):
+    for col in cols:
+        df = df[df[col] != value]
     return df
 
 def standardscaling(df, cols):
@@ -66,27 +69,31 @@ def standardscaling(df, cols):
     X_train_scaled = scaler.transform(df[cols])
     return X_train_scaled
 
-def less_greater_encoding(df, base_col, new_col, threshold):
-    def func(row):
-        if row[base_col] >= threshold:
+def less_greater_encoding(df, cols, threshold):
+    def func(cell):
+        if cell >= threshold:
             return 1
         else:
             return 0
 
-    df[new_col] = df.apply(func, axis=1)
+    for col in cols:
+        new_col_name = col + "_lessgreatenc_" + str(threshold)
+        df[new_col_name] = df.apply(lambda x: func(x[col]), axis=1)
     return df
 
 def two_cols_percent_delta(df, base_col, second_col, new_col):
     df[new_col] = (df[second_col] / df[base_col]) * 100 - 100
     return df
 
-def keep_dtype_only(df, base_col, dtype):
+def keep_dtype_only(df, cols, dtype):
     def type_check(x):
         return type(x) is eval(dtype)
 
-    df = df[df[base_col].apply(lambda x: type_check(x))]
+    for col in cols:
+        df = df[df[col].apply(lambda x: type_check(x))]
     return df
 
-def set_col_dtype(df, base_col, dtype):
-    df[base_col] = df[base_col].astype(dtype)
+def set_col_dtype(df, cols, dtype):
+    for col in cols:
+        df[col] = df[col].astype(dtype)
     return df
