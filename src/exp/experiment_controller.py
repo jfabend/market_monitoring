@@ -31,7 +31,7 @@ models_to_apply = []
 if type(exp_config.models) is str:
   modelname = exp_config.models
 
-  # Create sklearn model object according to given model name
+  # Initialize model object according to given model name
   # without any params (without further info, default values would be used)
   next_model_class = Model(model_name = modelname)
   next_model_object = next_model_class.return_model()
@@ -52,7 +52,7 @@ if type(exp_config.models) is str:
 else:
   for modelname in exp_config.models:
 
-      # Create sklearn model object according to given model name
+      # Initialize model  object according to given model name
       # without any params (without further info, default values would be used)
       next_model_class = Model(model_name = modelname)
       next_model_object = next_model_class.return_model()

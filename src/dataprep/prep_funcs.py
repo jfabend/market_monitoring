@@ -37,19 +37,20 @@ def new_col_percent_delta(df, base_col, new_col, days):
     df[new_col] = (df[base_col] / df[base_col].shift(days)) * 100 - 100
     return df
 
-def shift_col_preview(df, base_col, new_col, days):
+def shift_cols_preview(df, cols, days):
     """add the value of base col x days in the future to the current row
 
     Args:
         df (dataFrame): the dataframe
-        base_col (str): the column to be shifted
-        new_col (str): name of the new column
+        cols (str): the columns to be shifted
         days (int): which day in the future shall be added to the current rows
 
     Returns:
         [type]: [description]
     """
-    df[new_col] = df[base_col].shift(-days)
+    for col in cols:
+        new_col_name = col + "_shiftprev_" + str(days)
+        df[new_col_name] = df[col].shift(-days)
     return df
 
 def rolling_mean(df, base_col, new_col, days):
