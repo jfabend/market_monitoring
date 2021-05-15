@@ -255,26 +255,41 @@ def form_main_part_core_query(cols, target_types, tablename):
     for col in cols:
         idx = cols.index(col)
         if idx != (len(cols) - 1):
+
+            # if it's not the last column and a date
             if 'date' in target_types[idx]:
-                query = query + "TO_DATE(" + tablename + "." + col + ", '" + target_types[idx].replace("date__", "") + "')" + " AS " + "date"
+                query = f"{query} TO_DATE({tablename}.{col}, '{target_types[idx].replace('date__', '')}') AS date"
+            
+            # if it's not the last column and it is supposed to be decimal
+            # (by nullif(trim()) we make sure that we can insert NULLs as double precision)
             if target_types[idx] is 'numeric' or 'decimal' in target_types[idx]:
                 if 'eu_' in target_types[idx]:
-                    query = query + "CAST(nullif(trim(REPLACE(REPLACE(" + tablename + "." + col + ", '.', ''), ',', '.')), '')::double precision AS double precision)" + " AS " + col                  
+                    query = f"{query} CAST(nullif(trim(REPLACE(REPLACE({tablename}.{col}, '.', ''), ',', '.')), '')::double precision AS double precision) AS {col}"               
                 else:
-                    query = query + "CAST(nullif(trim(" + tablename + "." + col + "), '')::double precision AS double precision)" + " AS " + col
+                    query = f"{query} CAST(nullif(trim({tablename}.{col}), '')::double precision AS double precision) AS {col}"
+
+             # if it's not the last column and there is no column transformation needed
             if 'date'not in target_types[idx] and 'numeric' not in target_types[idx] and 'decimal' not in target_types[idx]:
-                query = query + tablename + "." + col + " AS " + col
+                query = f"{query} {tablename}.{col} AS {col}"
             query = query + ", "
+
         else:
+
+            # if it's the last column and a date
             if 'date' in target_types[idx]:
-                query = query + "TO_DATE(" + tablename + "." + col + ", '" + target_types[idx].replace("date__", "") + "')" + " AS " + "date"
+                query = f"{query} TO_DATE({tablename}.{col}, '{target_types[idx].replace('date__', '')}') AS date"
+
+            # if it's the last column and it is supposed to be decimal
+            # (by nullif(trim()) we make sure that we can insert NULLs as double precision)
             if target_types[idx] is 'numeric' or 'decimal' in target_types[idx]:
                 if 'eu_' in target_types[idx]:
-                    query = query + "CAST(nullif(trim(REPLACE(REPLACE(" + tablename + "." + col + ", '.', ''), ',', '.')), '')::double precision AS double precision)" + " AS " + col                 
+                    query = f"{query} CAST(nullif(trim(REPLACE(REPLACE({tablename}.{col}, '.', ''), ',', '.')), '')::double precision AS double precision) AS {col}"                 
                 else:
-                    query = query + "CAST(nullif(trim(" + tablename + "." + col + "), '')::double precision AS double precision)" + " AS " + col
+                    query = f"{query} CAST(nullif(trim({tablename}.{col}), '')::double precision AS double precision) AS {col}"
+
+            # if it's the last column and there is no column transformation needed
             if 'date'not in target_types[idx] and 'numeric' not in target_types[idx] and 'decimal' not in target_types[idx]:
-                query = query + tablename + "." + col + " AS " + col
+                query = f"{query} {tablename}.{col} AS {col}"
     query = query + " FROM " + tablename
     return query
 
