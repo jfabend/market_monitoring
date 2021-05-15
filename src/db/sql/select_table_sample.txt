@@ -1,0 +1,1 @@
+select * from __tablename__ order by RANDOM() limit __limit__;

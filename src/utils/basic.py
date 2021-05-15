@@ -259,9 +259,9 @@ def form_main_part_core_query(cols, target_types, tablename):
                 query = query + "TO_DATE(" + tablename + "." + col + ", '" + target_types[idx].replace("date__", "") + "')" + " AS " + "date"
             if target_types[idx] is 'numeric' or 'decimal' in target_types[idx]:
                 if 'eu_' in target_types[idx]:
-                    query = query + "CAST(REPLACE(REPLACE(" + tablename + "." + col + ", '.', ''), ',', '.') AS double precision)" + " AS " + col                  
+                    query = query + "CAST(nullif(trim(REPLACE(REPLACE(" + tablename + "." + col + ", '.', ''), ',', '.')), '')::double precision AS double precision)" + " AS " + col                  
                 else:
-                    query = query + "CAST(" + tablename + "." + col + " AS double precision)" + " AS " + col
+                    query = query + "CAST(nullif(trim(" + tablename + "." + col + "), '')::double precision AS double precision)" + " AS " + col
             if 'date'not in target_types[idx] and 'numeric' not in target_types[idx] and 'decimal' not in target_types[idx]:
                 query = query + tablename + "." + col + " AS " + col
             query = query + ", "
@@ -270,9 +270,9 @@ def form_main_part_core_query(cols, target_types, tablename):
                 query = query + "TO_DATE(" + tablename + "." + col + ", '" + target_types[idx].replace("date__", "") + "')" + " AS " + "date"
             if target_types[idx] is 'numeric' or 'decimal' in target_types[idx]:
                 if 'eu_' in target_types[idx]:
-                    query = query + "CAST(REPLACE(REPLACE(" + tablename + "." + col + ", '.', ''), ',', '.') AS double precision)" + " AS " + col                 
+                    query = query + "CAST(nullif(trim(REPLACE(REPLACE(" + tablename + "." + col + ", '.', ''), ',', '.')), '')::double precision AS double precision)" + " AS " + col                 
                 else:
-                    query = query + "CAST(" + tablename + "." + col + " AS double precision)" + " AS " + col
+                    query = query + "CAST(nullif(trim(" + tablename + "." + col + "), '')::double precision AS double precision)" + " AS " + col
             if 'date'not in target_types[idx] and 'numeric' not in target_types[idx] and 'decimal' not in target_types[idx]:
                 query = query + tablename + "." + col + " AS " + col
     query = query + " FROM " + tablename

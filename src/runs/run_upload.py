@@ -13,17 +13,17 @@ from db.delta_upload import DeltaUploader
 
 def main(argv):
    # set input folder here for debugging:
-   inputfolder = 'C:\Data\Trading\market_monitoring\data'
-   #inputfolder = ''
+   #inputfolder = 'C:\Data\Trading\market_monitoring\data'
+   inputfolder = ''
    table = ''
    try:
       opts, arg = getopt.getopt(argv,"hi:",["ifolder="])
    except getopt.GetoptError:
-      print('upload.py -i <inputfolder>')
+      print('run_upload.py -i <inputfolder>')
       sys.exit(2)
    for opt, arg in opts:
       if opt == '-h':
-         print('upload.py -i <inputfolder>')
+         print('run_upload.py -i <inputfolder>')
          sys.exit()
       elif opt in ("-i", "--ifolder"):
          inputfolder = arg

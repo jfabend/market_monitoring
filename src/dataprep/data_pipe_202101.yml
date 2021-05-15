@@ -1,0 +1,8 @@
+p1:
+  func: 'drop_na_rows'
+p2:
+  func: 'shift_cols_preview'
+  cols:
+    - c_vix__high
+    - c_sp500__high
+  days: 1
