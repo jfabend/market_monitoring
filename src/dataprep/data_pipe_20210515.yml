@@ -1,0 +1,142 @@
+p1:
+  func: 'drop_na_rows'
+p98:
+  func: set_col_dtype
+  cols: c_vix__high
+  dtype: float
+# Create 1 Day percent delta - shift this for getting the target
+p50:
+  func: 'rolling_mean'
+  cols: 'c_sp500__high'
+  days: 40
+# Calculate the moving averages for 50 and 200 days
+p5:
+  func: 'rolling_mean'
+  cols:
+    - 'c_sp500__high'
+    - 'c_vix__high'
+  days: 50
+# Bond Spread Base Columns:
+p16:
+  func: 'new_col_substract'
+  base_col: 'c_usa_bond_2year__open'
+  sub_col: 'c_usa_bond_10year__open'
+  new_col: 'bond_spread'
+p6:
+  func: 'rolling_mean'
+  cols:
+    - 'c_sp500__high'
+    - 'bond_spread'
+  days: 200
+p2:
+  func: 'new_col_percent_delta'
+  base_col: 'c_sp500__high_mavg_40'
+  new_col: 'c_sp500_40mavg_pdelta_1'
+  days: 1
+p3:
+  func: 'shift_cols_preview'
+  cols: 'c_sp500_40mavg_pdelta_1'
+  days: 1
+# TARGET column:
+p4:
+  func: 'less_greater_encoding'
+  cols: 'c_sp500_40mavg_pdelta_1_shiftprev_1'
+  threshold: 0
+# Calculate difference between sp500 and the moving averages
+p7:
+  func: 'new_col_substract'
+  base_col: 'c_sp500__high'
+  sub_col: 'c_sp500__high_mavg_200'
+  new_col: 'diff_sp500_200mavg'
+p8:
+  func: 'new_col_substract'
+  base_col: 'c_sp500__high'
+  sub_col: 'c_sp500__high_mavg_50'
+  new_col: 'diff_sp500_50mavg'
+# Create two momentum features
+p9:
+  func: 'new_col_percent_delta'
+  base_col: 'c_sp500__high'
+  new_col: 'c_sp500__momentum3'
+  days: 3
+p10:
+  func: 'new_col_percent_delta'
+  base_col: 'c_sp500__high'
+  new_col: 'c_sp500__momentum5'
+  days: 5
+#p99:
+#  func: 'keep_dtype_only'
+#  base_col: 'c_vix__high'
+#  dtype: float
+# VIX Base Columns
+p11:
+  func: 'new_col_percent_delta'
+  base_col: 'c_vix__high'
+  new_col: 'c_vix__pdelta1'
+  days: 1
+p12:
+  func: 'new_col_percent_delta'
+  base_col: 'c_vix__high'
+  new_col: 'c_vix__pdelta2'
+  days: 2
+# VIX Feature Columns
+p14:
+  func: 'two_cols_percent_delta'
+  base_col: 'c_vix__high_mavg_50'
+  second_col: 'c_vix__pdelta1'
+  new_col: 'diff_vix_50mavg1'
+p15:
+  func: 'two_cols_percent_delta'
+  base_col: 'c_vix__high_mavg_50'
+  second_col: 'c_vix__pdelta2'
+  new_col: 'diff_vix_50mavg2'
+# Bond Spread Feature Columns:
+p18:
+  func: 'new_col_percent_delta'
+  base_col: 'bond_spread_mavg_200'
+  new_col: 'bond_spread200_2year_delta'
+  days: 500
+p19:
+  func: 'new_col_percent_delta'
+  base_col: 'bond_spread_mavg_200'
+  new_col: 'bond_spread200_1year_delta'
+  days: 250
+p20:
+  func: 'new_col_percent_delta'
+  base_col: 'bond_spread_mavg_200'
+  new_col: 'bond_spread200_halfyear_delta'
+  days: 125
+ #Credit Risk Base Column
+p21:
+  func: 'rolling_mean'
+  cols: 'c_ted_spread_credit_risk__value'
+  days: 100
+# Credit Risk Feature Columns
+p22:
+  func: 'new_col_percent_delta'
+  base_col: 'c_ted_spread_credit_risk__value_mavg_100'
+  new_col: 'credit_risk_1month_delta'
+  days: 21
+p23:
+  func: 'new_col_percent_delta'
+  base_col: 'c_ted_spread_credit_risk__value_mavg_100'
+  new_col: 'credit_risk_2month_delta'
+  days: 42
+p24:
+  func: 'new_col_percent_delta'
+  base_col: 'c_ted_spread_credit_risk__value_mavg_100'
+  new_col: 'credit_risk_3month_delta'
+  days: 63
+ #Leitzins Feature Columns
+p25:
+  func: 'new_col_percent_delta'
+  base_col: 'c_leitzins_usa__value'
+  new_col: 'leitzins_usa_3month_delta'
+  days: 63
+p26:
+  func: 'new_col_percent_delta'
+  base_col: 'c_leitzins_usa__value'
+  new_col: 'leitzins_usa_2month_delta'
+  days: 42
+p27:
+  func: 'drop_na_rows'

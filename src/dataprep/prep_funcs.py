@@ -2,6 +2,7 @@ import pandas as pd
 import numpy as np
 import sys, os
 from dotenv import load_dotenv
+import box
 load_dotenv(verbose=False)
 sys.path.append(os.getenv("ROOT_DIR"))
 
@@ -48,15 +49,23 @@ def shift_cols_preview(df, cols, days):
     Returns:
         [type]: [description]
     """
-    for col in cols:
-        new_col_name = col + "_shiftprev_" + str(days)
-        df[new_col_name] = df[col].shift(-days)
+    if type(cols) == box.box_list.BoxList:
+        for col in cols:
+            new_col_name = col + "_shiftprev_" + str(days)
+            df[new_col_name] = df[col].shift(-days)
+    if type(cols) == str:
+        new_col_name = cols + "_shiftprev_" + str(days)
+        df[new_col_name] = df[cols].shift(-days)
     return df
 
 def rolling_mean(df, cols, days):
-    for col in cols:
-        new_col_name = col + "_mavg_" + str(days)
-        df[new_col_name] = df[col].rolling(days).mean() 
+    if type(cols) == box.box_list.BoxList:
+        for col in cols:
+            new_col_name = col + "_mavg_" + str(days)
+            df[new_col_name] = df[col].rolling(days).mean()
+    if type(cols) == str:
+        new_col_name = cols + "_mavg_" + str(days)
+        df[new_col_name] = df[cols].rolling(days).mean()
     return df
 
 def remove_by_value(df, cols, value):
@@ -76,9 +85,13 @@ def less_greater_encoding(df, cols, threshold):
         else:
             return 0
 
-    for col in cols:
-        new_col_name = col + "_lessgreatenc_" + str(threshold)
-        df[new_col_name] = df.apply(lambda x: func(x[col]), axis=1)
+    if type(cols) == box.box_list.BoxList:
+        for col in cols:
+            new_col_name = col + "_lessgreatenc_" + str(threshold)
+            df[new_col_name] = df.apply(lambda x: func(x[col]), axis=1)
+    if type(cols) == str:
+        new_col_name = cols + "_lessgreatenc_" + str(threshold)
+        df[new_col_name] = df.apply(lambda x: func(x[cols]), axis=1)
     return df
 
 def two_cols_percent_delta(df, base_col, second_col, new_col):
@@ -94,6 +107,9 @@ def keep_dtype_only(df, cols, dtype):
     return df
 
 def set_col_dtype(df, cols, dtype):
-    for col in cols:
-        df[col] = df[col].astype(dtype)
+    if type(cols) == box.box_list.BoxList:
+        for col in cols:
+            df[col] = df[col].astype(dtype)
+    if type(cols) == str:
+        df[cols] = df[cols].astype(dtype)
     return df
