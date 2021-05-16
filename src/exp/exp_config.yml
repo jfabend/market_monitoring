@@ -10,11 +10,11 @@ feature_list:
   #- "c_vix__high"
   #- "c_usa_bond_10year__open"
   #- "dim_time_month"
-  - "credit_risk_100mavg"
-  - "c_vix__50mavg"
-  - "bond_spread__200mavg"
-table_name: "prepped_20201115"
-target: "sp500_mavg_higher_lower"
+  - "c_ted_spread_credit_risk__value_mavg_100"
+  - "c_vix__high_mavg_50"
+  - "bond_spread_mavg_200"
+table_name: "prepped_20210515"
+target: "c_sp500_40mavg_pdelta_1_shiftprev_1_lessgreatenc_0"
 models: "logisticregression"
   #linearmodel:
   #  linearmodel__normalize:
