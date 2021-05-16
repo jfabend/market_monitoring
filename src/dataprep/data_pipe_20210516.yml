@@ -1,0 +1,9 @@
+p2:
+  func: fill_na_with_last_value
+  cols:
+    - c_industrial_production__value
+    - c_us_national_unemployment_rate__value
+    - c_capacity_utilization__value
+    - c_sp500__high
+p3:
+  func: drop_na_rows

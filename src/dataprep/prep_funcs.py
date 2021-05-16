@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 import sys, os
+import math
 from dotenv import load_dotenv
 import box
 load_dotenv(verbose=False)
@@ -113,3 +114,15 @@ def set_col_dtype(df, cols, dtype):
     if type(cols) == str:
         df[cols] = df[cols].astype(dtype)
     return df
+
+def fill_na_with_last_value(df, cols):
+    """This function fills empty cells of column with last filled value.
+
+    Args:
+        df (pandas dataframe): The dataframe passed through the prep pipeline
+        cols (BoxList or str): The Columns on which this function shall be applied
+    """
+    dfa = df.copy()
+    df[cols] = dfa[cols].fillna(method='ffill')
+    return df
+    

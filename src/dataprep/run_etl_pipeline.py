@@ -13,9 +13,9 @@ from dataprep import prep_funcs
 logging.basicConfig(level = logging.INFO)
 
 # Read the pipeline config
-pipe_config_pipe = "\\dataprep\\data_pipe_20210515.yml"
+pipe_config_pipe = "\\dataprep\\data_pipe_20210516.yml"
 pipe_config = basic.read_config(pipe_config_pipe)
-db_table_name = "standard_features"
+db_table_name = "pre_features_20210516"
 data = get_dbtable_data(db_table_name)
 
 logging.info(f' Prep pipeline to run: {pipe_config_pipe}')
@@ -71,4 +71,4 @@ def run_pipeline(df):
 
 new_df = run_pipeline(data)
 
-write_table(new_df, "prepped_20210515")
+write_table(new_df, "prepped_20210516")
