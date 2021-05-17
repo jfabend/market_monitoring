@@ -94,10 +94,10 @@ def less_greater_encoding(df, cols, threshold):
 
     if type(cols) == box.box_list.BoxList:
         for col in cols:
-            new_col_name = col + "_lessgreatenc_" + str(threshold)
+            new_col_name = col + "_lessgreatenc"
             df[new_col_name] = df.apply(lambda x: func(x[col]), axis=1)
     if type(cols) == str:
-        new_col_name = cols + "_lessgreatenc_" + str(threshold)
+        new_col_name = cols + "_lessgreatenc"
         df[new_col_name] = df.apply(lambda x: func(x[cols]), axis=1)
     return df
 
@@ -131,4 +131,21 @@ def fill_na_with_last_value(df, cols):
     dfa = df.copy()
     df[cols] = dfa[cols].fillna(method='ffill')
     return df
+
+def set_positive_values_to_zero(df, cols):
+    def func(cell):
+        if cell >= 0:
+            return cell
+        else:
+            return 0
+
+    if type(cols) == box.box_list.BoxList:
+        for col in cols:
+            df[col] = df.apply(lambda x: func(x[col]), axis=1)
+    if type(cols) == str:
+        df[cols] = df.apply(lambda x: func(x[cols]), axis=1)
+    return df
     
+def rename_col(df, old_colname, new_colname):
+    df = df.rename(columns={old_colname: new_colname})
+    return df

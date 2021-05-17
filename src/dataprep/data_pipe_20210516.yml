@@ -6,34 +6,36 @@ p2:
     - c_industrial_production__value
     - c_us_national_unemployment_rate__value
     - c_capacity_utilization__value
-    - c_sp500__high
+    #- c_sp500__close
 p97:
-  func: drop_na_rows
+ func: drop_na_rows
 # Smoothing of the features
   # fed_funds_rate: 60, 120, 200 Tage
   # capa_util: 300, 600
   # us_unemployment: 300, 600, 900
   # industrial_production: 90, 180
-  # sp500: 60, 90, 120
+  # sp500: 200
   # (adds prefix "_mavg_[days]" as colnames)
 p3:
   func: rolling_mean
   cols:
     - c_fed_funds_rate__value
-    - c_sp500__high
   days: 60
 p4:
   func: rolling_mean
   cols:
     - c_industrial_production__value
-    - c_sp500__high
   days: 90
 p5:
   func: rolling_mean
   cols:
     - c_fed_funds_rate__value
-    - c_sp500__high
   days: 120
+p96:
+  func: rolling_mean
+  cols:
+    - c_fed_funds_rate__value
+  days: 150
 p99:
   func: rolling_mean
   cols:
@@ -49,16 +51,12 @@ p7:
   cols:
     - c_capacity_utilization__value
     - c_us_national_unemployment_rate__value
+    - c_sp500__close
   days: 300
 p8:
   func: rolling_mean
   cols:
     - c_capacity_utilization__value
-    - c_us_national_unemployment_rate__value
-  days: 600
-p9:
-  func: rolling_mean
-  cols:
     - c_us_national_unemployment_rate__value
   days: 600
 p98:
@@ -73,7 +71,7 @@ p98:
   # capa_util: 300, 600
   # us_unemployment: 300, 600, 900
   # industrial_production: 90, 180
-  # sp500: 60, 90, 120
+  # sp500: 200
 p10:
   func: col_past_percent_delta
   cols:
@@ -87,43 +85,47 @@ p10:
     - c_fed_funds_rate__value_mavg_60
     - c_fed_funds_rate__value_mavg_120
     - c_fed_funds_rate__value_mavg_200
-  days: 1
+  days: 180
 # Prepair SP500 Targets
-# Substract SP500 mavgs of x days in the future
-# with todays SP500 mavg
+# Calculate difference in percent between sp500 and the moving averages
+# (We are not interested in the longterm increase)
+# (but in the mid-term drawdowns)
 p11:
-  func: shift_cols_preview
-  cols: c_sp500__high_mavg_60
-  days: 60
+  func: new_col_substract
+  base_col: c_sp500__close
+  sub_col: c_sp500__close_mavg_300
+  new_col: sp_actual_mavg_300_diff
 p12:
-  func: shift_cols_preview
-  cols: c_sp500__high_mavg_90
-  days: 90
+  func: two_cols_percent_delta
+  base_col: c_sp500__close
+  second_col: sp_actual_mavg_300_diff
+  new_col: sp_actual_mavg_300_diffperc
+# Now calculate the daily rate of change of the diffperc to the sp500
 p13:
-  func: shift_cols_preview
-  cols: c_sp500__high_mavg_120
-  days: 120
-# Subtractions
+  func: col_past_percent_delta
+  cols: sp_actual_mavg_300_diffperc
+  days: 10
+# Smooth it by ten days
 p14:
-  func: new_col_substract
-  base_col: c_sp500__high_mavg_60_shiftprev_60
-  sub_col: c_sp500__high_mavg_60
-  new_col: sp_mavg_60_diff
-p15:
-  func: new_col_substract
-  base_col: c_sp500__high_mavg_90_shiftprev_90
-  sub_col: c_sp500__high_mavg_90
-  new_col: sp_mavg_90_diff
-p16:
-  func: new_col_substract
-  base_col: c_sp500__high_mavg_120_shiftprev_120
-  sub_col: c_sp500__high_mavg_120
-  new_col: sp_mavg_120_diff
+  func: rolling_mean
+  cols:
+    - sp_actual_mavg_300_diffperc_changeperc_10
+  days: 2000
+p93:
+  func: set_positive_values_to_zero
+  cols: sp_actual_mavg_300_diffperc_changeperc_10_mavg_2000
+p87:
+  func: rename_col
+  old_colname: sp_actual_mavg_300_diffperc_changeperc_10_mavg_2000
+  new_colname: target
 # Actual build of the targets
 p17:
   func: less_greater_encoding
-  cols:
-    - sp_mavg_60_diff
-    - sp_mavg_90_diff
-    - sp_mavg_120_diff
-  threshold: 0
+  cols: target
+  threshold: 0.1
+p89:
+  func: shift_cols_preview
+  cols: target_lessgreatenc
+  days: 50
+p18:
+  func: drop_na_rows
