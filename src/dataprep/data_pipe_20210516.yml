@@ -1,3 +1,5 @@
+# fill up the na values by their former values
+# (The colnames stay the same afterwards)
 p2:
   func: fill_na_with_last_value
   cols:
@@ -5,5 +7,123 @@ p2:
     - c_us_national_unemployment_rate__value
     - c_capacity_utilization__value
     - c_sp500__high
-p3:
+p97:
   func: drop_na_rows
+# Smoothing of the features
+  # fed_funds_rate: 60, 120, 200 Tage
+  # capa_util: 300, 600
+  # us_unemployment: 300, 600, 900
+  # industrial_production: 90, 180
+  # sp500: 60, 90, 120
+  # (adds prefix "_mavg_[days]" as colnames)
+p3:
+  func: rolling_mean
+  cols:
+    - c_fed_funds_rate__value
+    - c_sp500__high
+  days: 60
+p4:
+  func: rolling_mean
+  cols:
+    - c_industrial_production__value
+    - c_sp500__high
+  days: 90
+p5:
+  func: rolling_mean
+  cols:
+    - c_fed_funds_rate__value
+    - c_sp500__high
+  days: 120
+p99:
+  func: rolling_mean
+  cols:
+    - c_industrial_production__value
+  days: 180
+p6:
+  func: rolling_mean
+  cols:
+    - c_fed_funds_rate__value
+  days: 200
+p7:
+  func: rolling_mean
+  cols:
+    - c_capacity_utilization__value
+    - c_us_national_unemployment_rate__value
+  days: 300
+p8:
+  func: rolling_mean
+  cols:
+    - c_capacity_utilization__value
+    - c_us_national_unemployment_rate__value
+  days: 600
+p9:
+  func: rolling_mean
+  cols:
+    - c_us_national_unemployment_rate__value
+  days: 600
+p98:
+  func: rolling_mean
+  cols:
+    - c_us_national_unemployment_rate__value
+  days: 900
+# rate of change for the smoothed features
+# (comparison to the value of the former day)
+# Days of Smoothing of features
+  # fed_funds_rate: 60, 120, 200
+  # capa_util: 300, 600
+  # us_unemployment: 300, 600, 900
+  # industrial_production: 90, 180
+  # sp500: 60, 90, 120
+p10:
+  func: col_past_percent_delta
+  cols:
+    - c_industrial_production__value_mavg_90
+    - c_industrial_production__value_mavg_180
+    - c_us_national_unemployment_rate__value_mavg_300
+    - c_us_national_unemployment_rate__value_mavg_600
+    - c_us_national_unemployment_rate__value_mavg_900
+    - c_capacity_utilization__value_mavg_300
+    - c_capacity_utilization__value_mavg_600
+    - c_fed_funds_rate__value_mavg_60
+    - c_fed_funds_rate__value_mavg_120
+    - c_fed_funds_rate__value_mavg_200
+  days: 1
+# Prepair SP500 Targets
+# Substract SP500 mavgs of x days in the future
+# with todays SP500 mavg
+p11:
+  func: shift_cols_preview
+  cols: c_sp500__high_mavg_60
+  days: 60
+p12:
+  func: shift_cols_preview
+  cols: c_sp500__high_mavg_90
+  days: 90
+p13:
+  func: shift_cols_preview
+  cols: c_sp500__high_mavg_120
+  days: 120
+# Subtractions
+p14:
+  func: new_col_substract
+  base_col: c_sp500__high_mavg_60_shiftprev_60
+  sub_col: c_sp500__high_mavg_60
+  new_col: sp_mavg_60_diff
+p15:
+  func: new_col_substract
+  base_col: c_sp500__high_mavg_90_shiftprev_90
+  sub_col: c_sp500__high_mavg_90
+  new_col: sp_mavg_90_diff
+p16:
+  func: new_col_substract
+  base_col: c_sp500__high_mavg_120_shiftprev_120
+  sub_col: c_sp500__high_mavg_120
+  new_col: sp_mavg_120_diff
+# Actual build of the targets
+p17:
+  func: less_greater_encoding
+  cols:
+    - sp_mavg_60_diff
+    - sp_mavg_90_diff
+    - sp_mavg_120_diff
+  threshold: 0

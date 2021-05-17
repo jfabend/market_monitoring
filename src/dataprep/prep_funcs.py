@@ -24,8 +24,8 @@ def new_col_substract(df, base_col, sub_col, new_col):
     df[new_col] = df[base_col] - df[sub_col]
     return df
 
-def new_col_percent_delta(df, base_col, new_col, days):
-    """Percentage of decrease / increase of base col compared to minus x days 
+def col_past_percent_delta(df, cols, days):
+    """Percentage of decrease / increase of a column compared to minus x days 
 
     Args:
         df (dataFrame): the dataframe
@@ -36,7 +36,13 @@ def new_col_percent_delta(df, base_col, new_col, days):
     Returns:
         [type]: [description]
     """
-    df[new_col] = (df[base_col] / df[base_col].shift(days)) * 100 - 100
+    if type(cols) == box.box_list.BoxList:
+        for col in cols:
+            new_col_name = col + "_changeperc_" + str(days)
+            df[new_col_name] = (df[col] / df[col].shift(days)) * 100 - 100
+    if type(cols) == str:
+        new_col_name = cols + "_changeperc_" + str(days)
+        df[new_col_name] = (df[cols] / df[cols].shift(days)) * 100 - 100
     return df
 
 def shift_cols_preview(df, cols, days):
