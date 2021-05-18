@@ -3,15 +3,16 @@ feature_list:
     #- c_fed_funds_rate__value_mavg_120_changeperc_180 #=> No need for this transformation
     #- c_industrial_production__value_mavg_180_changeperc_180 #=> No need for this transformation
     #- c_capacity_utilization__value_mavg_300_changeperc_180 #=> No need for this transformation
-    - c_us_national_unemployment_rate__value
-    - c_fed_funds_rate__value
-    - c_industrial_production__value
-    - c_capacity_utilization__value
+    ##- c_us_national_unemployment_rate__value
+    ##- c_fed_funds_rate__value # leave this out
+    ##- c_industrial_production__value
+    ##- c_capacity_utilization__value
+    ##- c_us_inflation_rate_monthly__value
     # - c_usa_bond_10year__open => Makes it worse
     # - c_usa_bond_2year__open => Makes it worse
     # - c_vix__close => Makes it worse
     # - c_ted_spread_credit_risk__value => Makes it worse
-    #- c_sugar_prices__value
+    - c_sugar_prices__value
 
 table_name: "prepped_20210516"
 target: "target_lessgreatenc_shiftprev_50"

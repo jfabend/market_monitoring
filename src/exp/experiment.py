@@ -36,14 +36,26 @@ class Experiment():
 
 # Perfom gridsearch cross validation and evaluation
     def start(self):
+        print("Feature Data Sample:")
+        print(self.feature_data.sample(10))
         
         # initialize scikit model tuple
         model_tuple = (self.modelname, self.model)
 
         # initiailze preprocess tuple and append it to the model tuple
-        preprocess_tuples = get_preprocessing_pipe(filename="\\exp\\preprocess_pipe.yml")
+        # preprocessing could also include resampling / balancing of the data
+        # hence, we need to hand over the datasets to the preprocessing function
+        preprocessfile = "\\exp\\preprocess_pipe.yml"
+        preprocess_tuples, features_resambled, target_resambled  = get_preprocessing_pipe(preprocessfile, self.feature_data, self.target_data)
         preprocess_tuples.append(model_tuple)
         pipe = Pipeline(steps = preprocess_tuples)
+
+        # If the data was resampled during preprocessing
+        # overwrite self.feature_data and self.target_data
+        if type(features_resambled) != str and type(target_resambled) != str:
+            self.feature_data = features_resambled
+            self.target_data = target_resambled
+            print(target_resambled.value_counts())
 
         # if there is no param grid, start the simple scikit cross_validate()
         if self.param_grid == "none":

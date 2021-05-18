@@ -10,10 +10,11 @@ from sklearn.preprocessing import MinMaxScaler
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
+from imblearn.over_sampling import SMOTE
 from utils import basic
 
 
-def get_preprocessing_pipe(filename):
+def get_preprocessing_pipe(filename, feature_data, target_data):
 
     pipe_config = []
     try:
@@ -24,6 +25,8 @@ def get_preprocessing_pipe(filename):
 
 
     preprocess_tuple_list = []
+    features_resambled = "none"
+    target_resambled = "none"
   
     if len(pipe_config) > 0:
         for pipe_obj in pipe_config:
@@ -50,6 +53,12 @@ def get_preprocessing_pipe(filename):
                     ohe = ColumnTransformer([(col, OneHotEncoder(categories='auto'), [-1])], remainder = 'passthrough')
                     preprocess_tuple_list.append(('ohe', ohe))
 
+            if function == 'SMOTE':
+                # rebalance
+                features_resambled, target_resambled = SMOTE().fit_resample(feature_data, target_data)
+                
+
+
             #ohe = ColumnTransformer([("dim_time_month_new", OneHotEncoder(), [-1])], remainder = 'passthrough')
             #pca = PCA()
 
@@ -58,4 +67,4 @@ def get_preprocessing_pipe(filename):
             #steps = [('mmsc', mmsc), ('ohe', ohe), (self.modelname, self.model)]
             #steps = [('mmsc', mmsc), (self.modelname, self.model)]
             #steps = [(self.modelname, self.model)]
-    return preprocess_tuple_list
+    return preprocess_tuple_list, features_resambled, target_resambled

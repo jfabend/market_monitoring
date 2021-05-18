@@ -34,6 +34,12 @@ class FeatureJoiner():
 
         _Config = Config()
 
+        # First check if we need to drop the table if it already exists
+        drop_query = "DROP TABLE IF EXISTS __tablename__;"
+        drop_query = drop_query.replace("__tablename__", exptablename)
+        _QueryExecution = QueryExecution(self.conn, self.cur)
+        _QueryExecution.execute_query(drop_query)
+
         # Read query template for inspecting datatypes of a db table 
         query_path = str(_Config.queries["get_col_data_types"])
         data_type_query = basic.read_query_file(query_path)
@@ -102,7 +108,7 @@ class FeatureJoiner():
         final_query = create_query_target + " " +  create_query_tmp + " " + insert_query_tmp + " " + insert_query_target + " " + drop_tmp_query 
         print(final_query)
 
-        _QueryExecution = QueryExecution(self.conn, self.cur)
+        #_QueryExecution = QueryExecution(self.conn, self.cur)
         _QueryExecution.execute_query(final_query)
 
         self.cur.close()
