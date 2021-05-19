@@ -108,7 +108,7 @@ p77:
 p76:
   func: remove_if_smaller
   cols: dim_time_year
-  value: 1985
+  value: 1978
 p75:
   func: remove_if_greater
   cols: dim_time_year

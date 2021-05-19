@@ -60,16 +60,20 @@ class Experiment():
             print("New balance of the target classes:")
             print(target_resambled.value_counts())
 
+        # Cross Validation Parameters
+        # Move this to the exp_config.yml
+
         #my_scoring = 'accuracy'
         my_scoring = 'roc_auc'
+        folds = 5
 
         # if there is no param grid, start the simple scikit cross_validate()
         if self.param_grid == "none":
-            results = cross_validate(pipe, self.feature_data, self.target_data, cv=10, scoring =my_scoring)
+            results = cross_validate(pipe, self.feature_data, self.target_data, cv=folds, scoring=my_scoring)
 
         # if there is a param grid, start scikit GridSearchCV()    
         else:
-            grid = ms.GridSearchCV(pipe, self.param_grid, cv=10, scoring =my_scoring, return_train_score=False)
+            grid = ms.GridSearchCV(pipe, self.param_grid, cv=folds, scoring =my_scoring, return_train_score=False)
             grid.fit(self.feature_data, self.target_data)
             results = pd.DataFrame(grid.cv_results_)[['mean_test_score', 'std_test_score', 'params']] 
             print(grid.best_params_)

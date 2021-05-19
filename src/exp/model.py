@@ -1,4 +1,4 @@
-from sklearn import linear_model
+from sklearn import linear_model, svm
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBRegressor
 from xgboost import XGBClassifier
@@ -19,4 +19,6 @@ class Model():
             model = linear_model.LogisticRegression()
         if self.model_name == "xgboostclassifier":
             model = XGBClassifier()
+        if self.model_name == "svm":
+            model = svm.SVC()
         return model

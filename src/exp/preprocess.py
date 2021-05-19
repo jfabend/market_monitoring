@@ -60,7 +60,7 @@ def get_preprocessing_pipe(filename, feature_data, target_data):
                 features_resambled, target_resambled = SMOTE().fit_resample(feature_data, target_data)
                 
             if function == 'simpleimpute':
-                imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+                imp = SimpleImputer(missing_values=np.nan, strategy='median')
                 imp.fit(feature_data)
                 features_resambled = imp.transform(feature_data)
 

@@ -16,7 +16,7 @@ feature_list:
 
 table_name: "prepped_20210516"
 target: "c_bearmarket_days__value"
-models: xgboostclassifier
+models: svm
   #"xgboostclassifier"
   #"logisticregression"
   #linearmodel:
@@ -43,3 +43,4 @@ models: xgboostclassifier
   #    #- 'gblinear'
   #  xgboostregressor__min_child_weight:
   #    - 6
+  # svm
