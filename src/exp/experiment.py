@@ -63,8 +63,8 @@ class Experiment():
         # Cross Validation Parameters
         # Move this to the exp_config.yml
 
-        #my_scoring = 'accuracy'
-        my_scoring = 'roc_auc'
+        my_scoring = 'accuracy'
+        #my_scoring = 'roc_auc'
         folds = 5
 
         # if there is no param grid, start the simple scikit cross_validate()

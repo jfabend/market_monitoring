@@ -14,7 +14,7 @@ import pandas as pd
 # Read exp config yml
 import yaml
 from box import Box
-with open(os.getenv("ROOT_DIR") + "\\exp\\exp_config.yml", "r") as ymlfile:
+with open(os.getenv("ROOT_DIR") + "\\exp\\exp_config_20210519.yml", "r") as ymlfile:
   exp_config = Box(yaml.safe_load(ymlfile))
 
 # Read table from DB
@@ -70,4 +70,4 @@ else:
 
   results = experiment.start()
 print(results)
-print("test_score_mean: "+ str(results['test_score'].mean()))
+#print("test_score_mean: "+ str(results['test_score'].mean()))

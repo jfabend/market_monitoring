@@ -12,12 +12,15 @@ feature_cols = ["c_capacity_utilization.value",
                 "c_us_national_unemployment_rate.value",
                 "c_us_inflation_rate_monthly.value",
                 "c_ted_spread_credit_risk.value", #1986
-                #"c_vix.close", # 1990
-                #"c_usa_bond_2year.open", #1988
-                #"c_usa_bond_10year.open",
-                #"c_sugar_prices.value", #1962
+                "c_vix.close", # 1990
+                "c_usa_bond_2year.open", #1988
+                "c_usa_bond_10year.open",
+                "c_sugar_price.value", #1962
+                "c_crude_oil_price.real",
+                "c_jobless_claims.value", # rate of change
+                "c_copper_price.value", # rate of change mvg
                 "c_bearmarket_days.value",
                 "c_sp500.close"]
 
 _FeatureJoiner = FeatureJoiner()
-_FeatureJoiner.feature_join(feature_cols, "pre_features_20210516")
+_FeatureJoiner.feature_join(feature_cols, "pre_features_20210519")

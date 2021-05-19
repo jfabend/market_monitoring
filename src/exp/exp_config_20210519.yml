@@ -1,0 +1,44 @@
+feature_list:
+    #- c_us_national_unemployment_rate__value_mavg_300 #=> makes it worse
+    #- c_capacity_utilization__value_mavg_900 => makes it worse
+    - bond_spread_mavg_600
+    - c_ted_spread_credit_risk__value
+    #- c_vix__close => makes it worse
+
+table_name: "prepped_20210519"
+target: "c_bearmarket_days__value"
+models:
+  #"xgboostclassifier"
+  #"logisticregression"
+  #linearmodel:
+  #  linearmodel__normalize:
+  #    - "False"
+  #    - "True"
+  #knn:
+  #  k:
+  #    - 3
+  #    - 8
+  #  range: "false"
+  randomforestclassifier:
+  #   # max_depth:
+  #   #   - 5
+  #   #   - 10
+    randomforestclassifier__n_estimators:
+      - 1000
+  #xgboostregressor:
+  #  xgboostregressor__eta:
+  #    - 0.01
+  #  xgboostregressor__max_depth:
+  #    - 15
+  #  xgboostregressor__booster:
+  #    - 'gbtree'
+  #    #- 'gblinear'
+  #  xgboostregressor__min_child_weight:
+  #    - 6
+  # svm
+  # mlpclassifier:
+  #   mlpclassifier__solver:
+  #     - lbfgs
+  #     - adam
+  #   mlpclassifier__max_iter:
+  #     - 1000

@@ -1,0 +1,97 @@
+# fill up the na values by their former values
+# (The colnames stay the same afterwards)
+p2:
+  func: fill_na_with_last_value
+  cols:
+    - c_capacity_utilization__value
+    - "c_industrial_production__value"
+    - "c_fed_funds_rate__value"
+    - "c_us_national_unemployment_rate__value"
+    - "c_us_inflation_rate_monthly__value"
+    - "c_ted_spread_credit_risk__value" #1986
+    - "c_vix__close" # 1990
+    - "c_usa_bond_2year__open" #1988
+    - "c_usa_bond_10year__open"
+    - "c_sugar_price__value" #1962
+    - "c_crude_oil_price__real"
+    - "c_jobless_claims__value" # rate of change
+    - "c_copper_price__value" # rate of change mvg
+    - "c_bearmarket_days__value"
+    - "c_sp500__close"
+# p1:
+#   func: set_col_dtype
+#   cols:
+#     - c_vix__close
+#     - c_sugar_price__value
+#   dtype: float
+p4:
+  func: rolling_mean
+  cols:
+    - "c_us_national_unemployment_rate__value"
+  days: 300
+p5:
+  func: rolling_mean
+  cols:
+    - c_capacity_utilization__value
+    - c_fed_funds_rate__value
+  days: 900
+p10:
+  func: col_past_percent_delta
+  cols: c_industrial_production__value
+  days: 60
+p23:
+  func: col_past_percent_delta
+  cols: c_industrial_production__value
+  days: 90
+p11:
+  func: col_past_percent_delta
+  cols: c_fed_funds_rate__value_mavg_900
+  days: 200
+p12:
+  func: new_col_substract
+  base_col: c_usa_bond_10year__open
+  sub_col: c_usa_bond_2year__open
+  new_col: bond_spread
+p13:
+  func: rolling_mean
+  cols: bond_spread
+  days: 600
+p14:
+  func: rolling_mean
+  cols: bond_spread
+  days: 500
+p15:
+  func: rolling_mean
+  cols: bond_spread
+  days: 400
+p16:
+  func: rolling_mean
+  cols: c_ted_spread_credit_risk__value
+  days: 30
+p17:
+  func: rolling_mean
+  cols: c_ted_spread_credit_risk__value
+  days: 50
+# p24:
+#   func: rolling_mean
+#   cols: c_industrial_production__value_changeperc_60
+#   days: 100
+# p25:
+#   func: rolling_mean
+#   cols: c_industrial_production__value_changeperc_90
+#   days: 100
+# p14:
+#   func: col_past_percent_delta
+#   cols: bond_spread_mavg_600
+#   days: 200
+p77:
+  func: drop_na_rows
+  special_col: 'c_bearmarket_days__value'
+p76:
+  func: remove_if_smaller
+  cols: dim_time_year
+  value: 1978
+p75:
+  func: remove_if_greater
+  cols: dim_time_year
+  value: 2021

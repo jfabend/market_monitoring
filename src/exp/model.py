@@ -1,5 +1,6 @@
 from sklearn import linear_model, svm
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.neural_network import MLPClassifier
 from xgboost import XGBRegressor
 from xgboost import XGBClassifier
 
@@ -21,4 +22,6 @@ class Model():
             model = XGBClassifier()
         if self.model_name == "svm":
             model = svm.SVC()
+        if self.model_name == "mlpclassifier":
+            model = MLPClassifier()
         return model
