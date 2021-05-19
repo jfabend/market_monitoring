@@ -55,6 +55,7 @@ class Experiment():
         if type(features_resambled) != str and type(target_resambled) != str:
             self.feature_data = features_resambled
             self.target_data = target_resambled
+            print("New balance of the target classes:")
             print(target_resambled.value_counts())
 
         # if there is no param grid, start the simple scikit cross_validate()

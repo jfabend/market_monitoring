@@ -12,9 +12,12 @@ from sklearn.preprocessing import StandardScaler
 from utils import basic
 from db.get_dbtable_data import get_dbtable_data
 
-def drop_na_rows(df):
-    for col in df.columns:
-        df = df[~pd.isnull(df[col])]
+def drop_na_rows(df, special_col=""):
+    if special_col == "":
+        for col in df.columns:
+            df = df[~pd.isnull(df[col])]
+    else:
+        df = df[~pd.isnull(df[special_col])]
     return df
     
 def mean_by_group(df, targetcol, groupcols):
@@ -78,6 +81,22 @@ def rolling_mean(df, cols, days):
 def remove_by_value(df, cols, value):
     for col in cols:
         df = df[df[col] != value]
+    return df
+
+def remove_if_smaller(df, cols, value):
+    if type(cols) == box.box_list.BoxList:
+        for col in cols:
+            df = df[df[col] > value]
+    if type(cols) == str:
+        df = df[df[cols] > value]
+    return df
+
+def remove_if_greater(df, cols, value):
+    if type(cols) == box.box_list.BoxList:
+        for col in cols:
+            df = df[df[col] < value]
+    if type(cols) == str:
+        df = df[df[cols] < value]
     return df
 
 def standardscaling(df, cols):

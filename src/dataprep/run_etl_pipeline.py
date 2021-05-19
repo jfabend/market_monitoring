@@ -13,8 +13,8 @@ from dataprep import prep_funcs
 logging.basicConfig(level = logging.INFO)
 
 # Read the pipeline config
-#pipe_config_pipe = "\\dataprep\\data_pipe_20210516.yml"
-pipe_config_pipe = "\\dataprep\\data_pipe_20210518_dummy.yml"
+pipe_config_pipe = "\\dataprep\\data_pipe_20210516.yml"
+#pipe_config_pipe = "\\dataprep\\data_pipe_20210518_dummy.yml"
 pipe_config = basic.read_config(pipe_config_pipe)
 db_table_name = "pre_features_20210516"
 data = get_dbtable_data(db_table_name)

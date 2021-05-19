@@ -11,7 +11,7 @@ class Model():
     def return_model(self):
         if self.model_name == "linearmodel":
             model = linear_model.LinearRegression()
-        if self.model_name == "randomforestregressor":
+        if self.model_name == "randomforestclassifier":
             model = RandomForestClassifier()
         if self.model_name == "xgboostregressor":
             model = XGBRegressor(objective='reg:squarederror')
