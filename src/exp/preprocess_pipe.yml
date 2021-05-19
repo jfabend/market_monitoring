@@ -1,3 +1,5 @@
+p1:
+ func: simpleimpute
 #p1:
 #  func: 'minmaxscaler'
 # p2:

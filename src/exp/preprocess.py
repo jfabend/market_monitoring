@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import sys, os
 import logging
 from dotenv import load_dotenv
@@ -11,6 +12,7 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from imblearn.over_sampling import SMOTE
+from sklearn.impute import SimpleImputer
 from utils import basic
 
 
@@ -57,7 +59,10 @@ def get_preprocessing_pipe(filename, feature_data, target_data):
                 # rebalance
                 features_resambled, target_resambled = SMOTE().fit_resample(feature_data, target_data)
                 
-
+            if function == 'simpleimpute':
+                imp = SimpleImputer(missing_values=np.nan, strategy='mean')
+                imp.fit(feature_data)
+                features_resambled = imp.transform(feature_data)
 
             #ohe = ColumnTransformer([("dim_time_month_new", OneHotEncoder(), [-1])], remainder = 'passthrough')
             #pca = PCA()

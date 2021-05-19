@@ -70,3 +70,4 @@ else:
 
   results = experiment.start()
 print(results)
+print("test_score_mean: "+ str(results['test_score'].mean()))

@@ -52,19 +52,24 @@ class Experiment():
 
         # If the data was resampled during preprocessing
         # overwrite self.feature_data and self.target_data
-        if type(features_resambled) != str and type(target_resambled) != str:
+        if type(features_resambled) != str:
             self.feature_data = features_resambled
+
+        if type(target_resambled) != str:
             self.target_data = target_resambled
             print("New balance of the target classes:")
             print(target_resambled.value_counts())
 
+        #my_scoring = 'accuracy'
+        my_scoring = 'roc_auc'
+
         # if there is no param grid, start the simple scikit cross_validate()
         if self.param_grid == "none":
-            results = cross_validate(pipe, self.feature_data, self.target_data, cv=10, scoring ='accuracy')
+            results = cross_validate(pipe, self.feature_data, self.target_data, cv=10, scoring =my_scoring)
 
         # if there is a param grid, start scikit GridSearchCV()    
         else:
-            grid = ms.GridSearchCV(pipe, self.param_grid, cv=10, scoring ='accuracy', return_train_score=False)
+            grid = ms.GridSearchCV(pipe, self.param_grid, cv=10, scoring =my_scoring, return_train_score=False)
             grid.fit(self.feature_data, self.target_data)
             results = pd.DataFrame(grid.cv_results_)[['mean_test_score', 'std_test_score', 'params']] 
             print(grid.best_params_)
