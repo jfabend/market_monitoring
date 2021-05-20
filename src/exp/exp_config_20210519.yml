@@ -3,6 +3,7 @@ feature_list:
     #- c_capacity_utilization__value_mavg_900 => makes it worse
     - bond_spread_mavg_600
     - c_ted_spread_credit_risk__value
+    - fed_funds_rate_notrend_mavg_300
     #- c_vix__close => makes it worse
 
 table_name: "prepped_20210519"

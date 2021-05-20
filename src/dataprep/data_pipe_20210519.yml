@@ -29,6 +29,11 @@ p4:
   cols:
     - "c_us_national_unemployment_rate__value"
   days: 300
+p70:
+  func: rolling_mean
+  cols:
+    - "c_fed_funds_rate__value"
+  days: 600
 p5:
   func: rolling_mean
   cols:
@@ -72,18 +77,56 @@ p17:
   func: rolling_mean
   cols: c_ted_spread_credit_risk__value
   days: 50
-# p24:
-#   func: rolling_mean
-#   cols: c_industrial_production__value_changeperc_60
-#   days: 100
-# p25:
-#   func: rolling_mean
-#   cols: c_industrial_production__value_changeperc_90
-#   days: 100
-# p14:
-#   func: col_past_percent_delta
-#   cols: bond_spread_mavg_600
-#   days: 200
+p73:
+  func: drop_na_rows
+  special_col: dim_time_date
+p72:
+  func: drop_na_rows
+  special_col: c_fed_funds_rate__value
+p67:
+  func: drop_na_rows
+  special_col: c_industrial_production__value
+p66:
+  func: drop_na_rows
+  special_col: c_capacity_utilization__value
+p18:
+  func: lin_reg_of_col
+  X_cols: dim_time_date
+  y_col: c_fed_funds_rate__value
+  new_colname: linreg_fed_funds_rate
+p21:
+  func: lin_reg_of_col
+  X_cols: dim_time_date
+  y_col: c_industrial_production__value
+  new_colname: linreg_industrial_production
+p65:
+  func: lin_reg_of_col
+  X_cols: dim_time_date
+  y_col: c_capacity_utilization__value
+  new_colname: linreg_capacity_utilization
+p22:
+  func: new_col_substract
+  base_col: c_fed_funds_rate__value
+  sub_col: linreg_fed_funds_rate
+  new_col: fed_funds_rate_notrend
+p24:
+  func: new_col_substract
+  base_col: c_industrial_production__value
+  sub_col: linreg_industrial_production
+  new_col: industrial_production_notrend
+p25:
+  func: new_col_substract
+  base_col: c_capacity_utilization__value
+  sub_col: linreg_capacity_utilization
+  new_col: capacity_utilization_notrend
+p26:
+  func: rolling_mean
+  cols: fed_funds_rate_notrend
+  days: 600
+p27:
+  func: rolling_mean
+  cols: fed_funds_rate_notrend
+  days: 300
 p77:
   func: drop_na_rows
   special_col: 'c_bearmarket_days__value'

@@ -8,6 +8,7 @@ load_dotenv(verbose=False)
 sys.path.append(os.getenv("ROOT_DIR"))
 
 from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LinearRegression
 
 from utils import basic
 from db.get_dbtable_data import get_dbtable_data
@@ -168,3 +169,11 @@ def set_positive_values_to_zero(df, cols):
 def rename_col(df, old_colname, new_colname):
     df = df.rename(columns={old_colname: new_colname})
     return df
+
+def lin_reg_of_col(df, X_cols, y_col, new_colname):
+    # NA values are a problem here
+    # Works only with date columns in X_cols
+    reg = LinearRegression().fit(df[X_cols].apply(lambda x: float(x.strftime('%Y%d%m'))).values.reshape(-1, 1), df[y_col])
+    df[new_colname] = reg.predict(df[X_cols].apply(lambda x: float(x.strftime('%Y%d%m'))).values.reshape(-1, 1))
+    return df
+
