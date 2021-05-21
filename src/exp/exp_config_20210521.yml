@@ -1,12 +1,13 @@
 feature_list:
-    # - unemployment_notrend => leave it out: higher accuracy, but lower roc_auc
-    #- c_capacity_utilization__value_mavg_900 => makes it worse
     - bond_spread_mavg_600
     - c_ted_spread_credit_risk__value
     - fed_funds_rate_notrend_mavg_300
-    #- c_vix__close => makes it worse
+    #- c_us_corporate_dept_to_gdp__value_mavg_70
+    #- c_sp500_bonds_return_ratio__value
+    #- return_aaa_corporate_vs_bonds_notrend
+    #- m2growth_inflation_spread_mavg_90
 
-table_name: "prepped_20210519"
+table_name: "prepped_20210521"
 target: "c_bearmarket_days__value"
 models:
   #"xgboostclassifier"

@@ -106,19 +106,38 @@ def standardscaling(df, cols):
     return X_train_scaled
 
 def less_greater_encoding(df, cols, threshold):
-    def func(cell):
-        if cell >= threshold:
+    """Returns 0 or 1 depending on the value in cols.
+
+    Args:
+        df (dataframe): the dataframe
+        cols (str or list): the column(s) to be encoded
+        threshold (str or float): median/mean of the col or float
+    """
+    def func(cell, thresh):
+        if cell >= thresh:
             return 1
         else:
             return 0
 
     if type(cols) == box.box_list.BoxList:
         for col in cols:
+            # if you pass e.g. mean or median as threshold:
+            if type(threshold) == str:
+                thresh = getattr(df[col], threshold)()
+            # if you pass a numeric as threshold:
+            else:
+                thresh = threshold
             new_col_name = col + "_lessgreatenc"
-            df[new_col_name] = df.apply(lambda x: func(x[col]), axis=1)
+            df[new_col_name] = df.apply(lambda x: func(x[col], thresh), axis=1)
     if type(cols) == str:
+        # if you pass e.g. mean or median as threshold:
+        if type(threshold) == str:
+            thresh = getattr(df[cols], threshold)()
+        # if you pass a numeric as threshold:
+        else:
+            thresh = threshold
         new_col_name = cols + "_lessgreatenc"
-        df[new_col_name] = df.apply(lambda x: func(x[cols]), axis=1)
+        df[new_col_name] = df.apply(lambda x: func(x[cols], thresh), axis=1)
     return df
 
 def two_cols_percent_delta(df, base_col, second_col, new_col):
@@ -136,8 +155,12 @@ def keep_dtype_only(df, cols, dtype):
 def set_col_dtype(df, cols, dtype):
     if type(cols) == box.box_list.BoxList:
         for col in cols:
+            if dtype == 'float':
+                df[col] = df[col].replace('', np.nan)
             df[col] = df[col].astype(dtype)
     if type(cols) == str:
+        if dtype == 'float':
+            df[col] = df[col].replace('', np.nan)
         df[cols] = df[cols].astype(dtype)
     return df
 
@@ -175,5 +198,32 @@ def lin_reg_of_col(df, X_cols, y_col, new_colname):
     # Works only with date columns in X_cols
     reg = LinearRegression().fit(df[X_cols].apply(lambda x: float(x.strftime('%Y%d%m'))).values.reshape(-1, 1), df[y_col])
     df[new_colname] = reg.predict(df[X_cols].apply(lambda x: float(x.strftime('%Y%d%m'))).values.reshape(-1, 1))
+    return df
+
+def count_past_rows_with_value(df, col, value):
+    row_counts = []
+    nrow = df[col].count() - 1
+    row_counts_index = 0
+    #for element in df.iloc[nrow:0][col]:
+    for element in df[col]:
+
+        if row_counts_index > 0:
+            last_row_count = row_counts[row_counts_index - 1]
+            if element == value:
+                row_counts.append(last_row_count + 1)
+                row_counts_index += 1
+            if element != value:
+                row_counts.append(0)
+                row_counts_index += 1
+
+        if row_counts_index == 0:
+            if element == value:
+                row_counts.append(1)
+                row_counts_index += 1
+            if element != value:
+                row_counts.append(0)
+                row_counts_index += 1
+    new_colname = col + "_rowcount"
+    df[new_colname] = row_counts
     return df
 
