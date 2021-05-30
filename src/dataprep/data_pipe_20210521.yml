@@ -15,6 +15,7 @@ p2:
     - "c_us_return_aaa_corporate_vs_bonds__value"
     - "c_us_return_baa_corporate_vs_bonds__value"
     - "c_bearmarket_days__value"
+    - c_large_small_cap_ratio__value
     - "c_sp500__close"
 p225:
   func: drop_na_rows
@@ -132,6 +133,38 @@ p31:
   func: rolling_mean
   cols: c_us_corporate_dept_to_gdp__value
   days: 600
+p32:
+  func: rolling_mean
+  cols: c_large_small_cap_ratio__value
+  days: 180
+p33:
+  func: rolling_mean
+  cols: c_large_small_cap_ratio__value
+  days: 90
+p34:
+  func: rolling_mean
+  cols: c_large_small_cap_ratio__value
+  days: 60
+p35:
+  func: rolling_mean
+  cols: c_large_small_cap_ratio__value
+  days: 30
+p36:
+  func: rolling_mean
+  cols: c_large_small_cap_ratio__value
+  days: 20
+p37:
+  func: rolling_mean
+  cols: c_large_small_cap_ratio__value
+  days: 10
+p38:
+  func: min_max_channel_cols
+  col: c_us_corporate_dept_to_gdp__value
+  n_points: 900
+p39:
+  func: min_max_channel_cols
+  col: c_large_small_cap_ratio__value
+  n_points: 600
 p77:
   func: drop_na_rows
   special_col: 'c_bearmarket_days__value'

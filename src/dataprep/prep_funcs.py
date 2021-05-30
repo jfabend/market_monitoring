@@ -9,6 +9,7 @@ sys.path.append(os.getenv("ROOT_DIR"))
 
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LinearRegression
+from scipy.signal import argrelextrema
 
 from utils import basic
 from db.get_dbtable_data import get_dbtable_data
@@ -227,3 +228,36 @@ def count_past_rows_with_value(df, col, value):
     df[new_colname] = row_counts
     return df
 
+def min_max_channel_cols(df, col, n_points):
+    """Adds two columns respresenting a trend channel based on local minima and maxima.
+
+    Args:
+        df (pandas dataframe): the dataframe.
+        col (float): The column for which we want to get a trend channel.
+        n_points (int): amount of points in the window
+    """
+    col_min = f'{col}_min_{n_points}'
+    col_max = f'{col}_max_{n_points}'
+
+    df[col_min] = df.iloc[argrelextrema(df[col].values, np.less_equal,
+                        order=n_points)[0]][col]
+    df[col_max] = df.iloc[argrelextrema(df[col].values, np.greater_equal,
+                        order=n_points)[0]][col]
+
+    df[col_min] = df[col_min].interpolate(method='linear')
+    df[col_max] = df[col_max].interpolate(method='linear')
+
+    return df
+
+def minmax_channel_pos(df, col, col_min, col_max):
+    """Calculates percentual position in minmax channel.
+
+    Args:
+        df (pandas df): the dataframe
+        col (float): the base column of the minmax channel
+        col_min (float): the lower border of the minmax channel
+        col_max (float): the top border of the minmax channel
+    """
+    df['max_min_diff'] = df[col_max] - df[col_min]
+    df[col + '_chanpos'] = (df[col_max] - df[col]) / df['max_min_diff']
+    return df

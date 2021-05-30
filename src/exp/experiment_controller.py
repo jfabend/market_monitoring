@@ -14,7 +14,7 @@ import pandas as pd
 # Read exp config yml
 import yaml
 from box import Box
-with open(os.getenv("ROOT_DIR") + "\\exp\\exp_config_20210521.yml", "r") as ymlfile:
+with open(os.getenv("ROOT_DIR") + "\\exp\\exp_config_20210530.yml", "r") as ymlfile:
   exp_config = Box(yaml.safe_load(ymlfile))
 
 # Read table from DB

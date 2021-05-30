@@ -1,14 +1,19 @@
 feature_list:
-    - bond_spread_mavg_600
+    #- bond_spread_mavg_600
     - c_ted_spread_credit_risk__value
     - fed_funds_rate_notrend_mavg_300
-    - c_large_small_cap_ratio__value_mavg_180
+    - bond_diff_1_30_mavg_600
+    - bond_diff_10_1_mavg_600
+    #- c_large_small_cap_ratio__value_mavg_180
+    #- c_us_national_unemployment_rate__value_chanpos
+    #- c_industrial_production__value_chanpos
+    #- c_sp500_bonds_return_ratio__value_chanpos
     #- c_us_corporate_dept_to_gdp__value_mavg_70
     # - c_sp500_pe_ratio__value => Makes it worse without transformation
     #- return_aaa_corporate_vs_bonds_notrend
     #- m2growth_inflation_spread_mavg_90
 
-table_name: "prepped_20210521"
+table_name: "prepped_20210601"
 target: "c_bearmarket_days__value"
 models:
   #"xgboostclassifier"
