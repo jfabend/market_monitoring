@@ -4,6 +4,7 @@ feature_list:
     - fed_funds_rate_notrend_mavg_300
     - bond_diff_1_30_mavg_600
     - bond_diff_10_1_mavg_600
+    - weeks_unemployed_notrend
     #- c_large_small_cap_ratio__value_mavg_180
     #- c_us_national_unemployment_rate__value_chanpos
     #- c_industrial_production__value_chanpos

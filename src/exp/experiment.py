@@ -63,8 +63,8 @@ class Experiment():
         # Cross Validation Parameters
         # Move this to the exp_config.yml
 
-        #my_scoring = 'accuracy'
-        my_scoring = 'roc_auc'
+        my_scoring = 'accuracy'
+        #my_scoring = 'roc_auc'
         # my_scoring = ['accuracy', 'roc_auc'] => !! Das geht nicht !!
         folds = 5
 

@@ -8,6 +8,7 @@ p2:
     - "c_us_bond_1year__value" #1988
     - "c_usa_bond_10year__value"
     - c_us_bond_30years__close
+    - c_us_median_weeks_unemployed__value
     - "c_bearmarket_days__value"
     - "c_sp500__close"
 p11:
@@ -18,6 +19,7 @@ p11:
     - "c_us_bond_1year__value" #1988
     - "c_usa_bond_10year__value"
     - c_us_bond_30years__close
+    - c_us_median_weeks_unemployed__value
     - "c_sp500__close"
   dtype: float
 p15:
@@ -69,6 +71,34 @@ p29:
     - bond_diff_10_30
     - bond_diff_10_1
   days: 600
+p30:
+  func: rolling_mean
+  cols:
+    - c_us_median_weeks_unemployed__value
+  days: 60
+p31:
+  func: rolling_mean
+  cols:
+    - c_us_median_weeks_unemployed__value
+  days: 120
+p32:
+  func: rolling_mean
+  cols:
+    - c_us_median_weeks_unemployed__value
+  days: 180
+p74:
+  func: drop_na_rows
+  special_col: c_us_median_weeks_unemployed__value_mavg_120
+p33:
+  func: lin_reg_of_col
+  X_cols: dim_time_date
+  y_col: c_us_median_weeks_unemployed__value_mavg_120
+  new_colname: linreg_weeks_unemployed
+p34:
+  func: new_col_substract
+  base_col: c_us_median_weeks_unemployed__value_mavg_120
+  sub_col: linreg_weeks_unemployed
+  new_col: weeks_unemployed_notrend
 p55:
   func: drop_na_rows
   special_col: 'c_bearmarket_days__value'
