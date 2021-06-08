@@ -9,7 +9,10 @@ p2:
     - "c_usa_bond_10year__value"
     - c_us_bond_30years__close
     - c_us_median_weeks_unemployed__value
-    - "c_bearmarket_days__value"
+    - "c_chicago_fed_fin_condition__value"
+    - "c_chicago_fed_fin_con_credit__value"
+    - "c_us_leading_idx__value"
+    - c_bearmarket_days__value
     - "c_sp500__close"
 p11:
   func: set_col_dtype
